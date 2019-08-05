@@ -4,8 +4,9 @@ import graphviz
 from sklearn import datasets, tree
 
 # read excel files
+print('Opening excel files VBA_data (train model) and input_observations (input data)')
 vba = pd.read_excel('VBA_data.xls') # VBA (training data)
-input = pd.read_excel('input_observations.xls') # input data (observations)
+input = pd.read_excel('input_observations.xlsx') # input data (observations)
 
 # predictors to build our tree model
 ufi = vba['UFI']
@@ -21,6 +22,7 @@ data_list = []
 target_list = []
 current_target_id = 0
 
+print('Building tree...')
 # iterate through excel spreadsheet
 for index in range(len(ufi)):
     try:
@@ -46,9 +48,12 @@ for index in range(len(ufi)):
 clf = tree.DecisionTreeClassifier()
 clf = clf.fit(data_list, target_list)
 tree.plot_tree(clf.fit(data_list, target_list)) 
-dot_data = tree.export_graphviz(clf, out_file=None) 
+dot_data = tree.export_graphviz(clf, out_file=None)
+
+print('Rendering tree graph...')
 graph = graphviz.Source(dot_data) 
 graph.render("vba")
+print('Tree graph can be seen in vba.pdf')
 
-print('Sample prediction')
-# print(clf.predict(input[features]))
+
+
