@@ -3,9 +3,11 @@ import numpy as np
 import graphviz 
 from sklearn import datasets, tree
 
-#read excel file
-vba = pd.read_excel('VBA_data.xls')
+# read excel files
+vba = pd.read_excel('VBA_data.xls') # VBA (training data)
+input = pd.read_excel('input_observations.xls') # input data (observations)
 
+# predictors to build our tree model
 ufi = vba['UFI']
 taxon_ids = vba['TAXON_ID']
 scientific_display = vba['SCIENTIFIC_DISPLAY_NME']
@@ -17,7 +19,9 @@ longitude = vba["LONGITUDEDD_NUM"]
 unique_taxon = {}
 data_list = []
 target_list = []
-current_target_id = 0    
+current_target_id = 0
+
+# iterate through excel spreadsheet
 for index in range(len(ufi)):
     try:
         target_id = unique_taxon[taxon_ids[index]][0]
@@ -45,3 +49,6 @@ tree.plot_tree(clf.fit(data_list, target_list))
 dot_data = tree.export_graphviz(clf, out_file=None) 
 graph = graphviz.Source(dot_data) 
 graph.render("vba")
+
+print('Sample prediction')
+# print(clf.predict(input[features]))
