@@ -1,3 +1,7 @@
+# VERY IMPORTANT
+Please do not commit and push the raster data files to git. (for example vegtype3_4)
+Just add it to your local as the size of it is too big. 
+
 # Before running:
 ```
 brew install graphviz
