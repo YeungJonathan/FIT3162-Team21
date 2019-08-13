@@ -25,7 +25,7 @@ def calculateRaster(point, yOri, xOri, type, pixw, pixh):
 # --------------------------------------------------------------------
 #      VEG
 # --------------------------------------------------------------------
-dataset = gdal.Open('./raster/vegtype3_4/vegtype3_4')
+dataset = gdal.Open('../raster/vegtype3_4/vegtype3_4')
 band = dataset.GetRasterBand(1)
 
 cols = dataset.RasterXSize
@@ -44,7 +44,7 @@ veg = band.ReadAsArray(0, 0, cols, rows)
 #      WETNESS
 # --------------------------------------------------------------------
 
-dataset = gdal.Open('./raster/wetness_index_saga_sept2012/wetness_index_saga_sept2012')
+dataset = gdal.Open('../raster/wetness_index_saga_sept2012/wetness_index_saga_sept2012')
 band = dataset.GetRasterBand(1)
 
 cols = dataset.RasterXSize
