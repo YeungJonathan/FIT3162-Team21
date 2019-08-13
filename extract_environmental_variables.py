@@ -382,7 +382,7 @@ streams = band.ReadAsArray(0, 0, cols, rows)
 
 # --------------------------------------------------------------------
 
-input = pd.read_excel('input_observations.xlsx') # input data (observations)
+input = pd.read_excel('VBA_data.xls') # input data (observations)
 df = input[['COMMON_NME','LONGITUDEDD_NUM', 'LATITUDEDD_NUM']]
 taxon_id = input['TAXON_ID']
 species = input['COMMON_NME']
@@ -483,8 +483,9 @@ for idx, val in enumerate(species):
                                pixelHeight_streams))
 
     row += 1
+    print(idx)
 
-    print(species[idx].ljust(25), ' ', str(lat[idx]).ljust(10),' ', str(long[idx]).ljust(10), ' ' ,
+    # print(species[idx].ljust(25), ' ', str(lat[idx]).ljust(10),' ', str(long[idx]).ljust(10), ' ' ,
           # str(calculateRaster(point, yOrigin, xOrigin, veg, pixelWidth, pixelHeight)).ljust(3), ' ',
           # str(calculateRaster(point, yOrigin_wet, xOrigin_wet, wet, pixelWidth_wet, pixelHeight_wet)).ljust(3), ' ',
           # str(calculateRaster(point, yOrigin_summer, xOrigin_summer, summer, pixelWidth_summer, pixelHeight_summer)).ljust(10), ' ',
@@ -519,7 +520,7 @@ for idx, val in enumerate(species):
           #                     pixelHeight_heat)).ljust(10), ' ',
           # str(calculateRaster(point, yOrigin_streams, xOrigin_streams, streams, pixelWidth_streams,
           #                     pixelHeight_streams)).ljust(10), ' ',
-          )
+          # )
 
 
 
