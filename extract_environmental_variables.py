@@ -443,8 +443,8 @@ for idx, val in enumerate(species):
     worksheet.write(row, col + 1, species[idx])
     worksheet.write(row, col + 2, reliability[idx])
     worksheet.write(row, col + 3, reliability_txt[idx])
-    worksheet.write(row, col + 4, long[idx])
-    worksheet.write(row, col + 5, lat[idx])
+    worksheet.write(row, col + 4, lat[idx])
+    worksheet.write(row, col + 5, long[idx])
     worksheet.write(row, col + 6, record_type[idx])
     worksheet.write(row, col + 7, sv_record_count[idx])
 
