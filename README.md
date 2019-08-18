@@ -17,9 +17,14 @@ Using the environmental variables tied to each location, we need to model based 
 The dataset we are given does not contain environmental variables. Thus, we need to extract environmental variables from long, lat locations using raster data that has been provided to us.
 
 # Steps
-1. Get VBA data containing long, lat (location) for each species
+1. Extracted VBA data (VBA_data.xls) containing long, lat (location) for each species
+2. Applied raster data (environmental variables) for each long, lat (location) value in VBA_data. Applying environmental variables for each long, lat (location) coordinate is needed, as to replicate expert review it was stated that we need to gather 'environmental variables tied to each location'
+3. Exported results to VBA_Raster.xlsx file. This file contains the species, their location, and 19 environmental variables associated with each location. 
+4. Build model for each species based on VBA_Raster data
 
 # Before running:
+1. Download raster files: https://drive.google.com/drive/folders/1kwLZlPiwJS47UNBrsXe3W78isjqoY6bg  
+Type in the terminal:
 ```
 brew install graphviz
 pip install pandas
