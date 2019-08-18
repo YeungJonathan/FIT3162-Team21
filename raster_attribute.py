@@ -53,6 +53,7 @@ def getMinMaxAverage(filePath):
     raster_array = get_raster_data_matrix(filePath)
     minNum, maxNum, average = getDetails(raster_array)
     print(minNum, maxNum, average)
+    return minNum, maxNum, average
 
 
 # if __name__ == "__main__":

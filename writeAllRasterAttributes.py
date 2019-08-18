@@ -24,11 +24,8 @@ dataArray.append('./raster/Radiometrics_2014_k/Radiometrics_2014_k')
 dataArray.append('./raster/ProtectionIndex/ProtectionIndex')
 dataArray.append('./raster/log_vertical_distance_saline_wetlands_sept2012/log_vertical_distance_saline_wetlands_sept2012')
 dataArray.append('./raster/land_cov_use3/land_cov_use3')
-dataArray.append('./raster/ProtectionIndex/ProtectionIndex')
 dataArray.append('./raster/ibra_hex/ibra_hex')
-dataArray.append('./raster/ProtectionIndex/ProtectionIndex')
 dataArray.append('./raster/hydro500xwi/hydro500xwi')
-dataArray.append('./raster/ProtectionIndex/ProtectionIndex')
 dataArray.append('./raster/ecoregion1750/ecoregion1750')
 dataArray.append('./raster/ecoregion2014/ecoregion2014')
 dataArray.append('./raster/Anisotrophic_Heating_Ruggedness/Anisotrophic_Heating_Ruggedness')
@@ -44,6 +41,7 @@ for filePath in dataArray:
     worksheet.write(row, 2, maxNum)
     worksheet.write(row, 3, average)
     row += 1
+    print("Finished: ", fileName)
 
 
 workbook.close()
