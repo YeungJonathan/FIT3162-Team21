@@ -1,4 +1,5 @@
 digraph Tree {
-node [shape=box] ;
-0 [label="gini = 0.0\nsamples = 32\nvalue = 32.0"] ;
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label=<gini = 0.0<br/>samples = 32<br/>value = 32.0>, fillcolor="#ffffff"] ;
 }
