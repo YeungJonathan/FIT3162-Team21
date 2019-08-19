@@ -3,6 +3,9 @@ import numpy as np
 import graphviz 
 from sklearn import datasets, tree
 
+# FYI
+# https://scikit-learn.org/stable/modules/tree.html
+
 #read excel file
 vba = pd.read_excel('VBA_data.xls')
 
@@ -27,13 +30,13 @@ for index in range(len(ufi)):
         current_target_id += 1
 
     if reliability[index] == "Acceptable":
-        current_reliability = 0
-    elif reliability[index] == "Confirmed":
-        current_reliability = 1
-    elif reliability[index] == "Unconfirmed":
-        current_reliability = 2
-    else:
         current_reliability = 3
+    elif reliability[index] == "Confirmed":
+        current_reliability = 2
+    elif reliability[index] == "Unconfirmed":
+        current_reliability = 1
+    else:
+        current_reliability = 0
         
     data_list.append([current_reliability, latitude[index], longitude[index]])
     target_list.append(target_id)
