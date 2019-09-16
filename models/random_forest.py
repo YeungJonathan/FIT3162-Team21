@@ -1,22 +1,12 @@
 import pandas as pd
-import numpy as np
-from sklearn.datasets.species_distributions import construct_grids
-import graphviz
-from sklearn import datasets, tree
-import matplotlib.pyplot as plt
-import geopy.distance
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn import preprocessing
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
 
+# read file containing raster data
+df = pd.read_excel('../VBA_Raster.xlsx')
 
-df = pd.read_excel('../VBA_Raster.xlsx') # VBA
-
-# get rid of string values (temporary)
-
+# get rid of unneeded values (to improve accuracy of model)
 del df['RELIABILITY']
 del df['COMMON_NME']
 del df['RELIABILITY_TXT']
@@ -28,14 +18,15 @@ del df['PROTECTION_INDEX']
 # get only agile antechinus values
 # df = df[df['TAXON_ID'] == 11028]
 
+# turn string values to numbers
 df.CDE_TYPE.replace(['FLORA', 'FAUNA'],
                        [0, 1], inplace=True)
 
 
-#x data
+#x data - columns
 features = df[df.columns[1:23]]
 
-#y data
+#y data - what we want to predict
 y=df['TAXON_ID']
 print("calculating observation result...")
 # split to train/test dataset
