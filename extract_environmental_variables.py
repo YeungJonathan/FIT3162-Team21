@@ -392,6 +392,7 @@ reliability = input['RELIABILITY']
 reliability_txt = input['RELIABILITY_TXT']
 record_type = input['RECORD_TYPE']
 sv_record_count = input['SV_RECORD_COUNT']
+cde = input['PRIMARY_CDE']
 
 # new excel sheet created
 workbook = xlsxwriter.Workbook('VBA_Raster.xlsx', {'nan_inf_to_errors': True})
@@ -427,6 +428,7 @@ worksheet.write('X1', 'ECOREGION_1')
 worksheet.write('Y1', 'ECOREGION_2')
 worksheet.write('Z1', 'HEATING')
 worksheet.write('AA1', 'STREAMS')
+worksheet.write('AB1', 'CDE_TYPE')
 
 
 # print("SPECIES".ljust(25), " LAT".ljust(15), " LONG".ljust(10), " VEG".ljust(5),
@@ -481,6 +483,7 @@ for idx, val in enumerate(species):
                                pixelHeight_heat))
     worksheet.write(row, col + 26, calculateRaster(point, yOrigin_streams, xOrigin_streams, streams, pixelWidth_streams,
                                pixelHeight_streams))
+    worksheet.write(row, col + 27, cde[idx])
 
     row += 1
     print(idx)
