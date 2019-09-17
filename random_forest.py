@@ -77,11 +77,16 @@ y_pred=clf.predict(X_test)
 # print accuracy and feature importance
 print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
 print("Features importance", clf.feature_importances_)
+print("Possible species", y.unique())
 
 # print prediction
 for i in range(len(input)):
    # print(input.loc[i, :])
-   print("Observer thought species was:", taxon_id[i], " Predicted species is: ", clf.predict([input.loc[i,:]]))
+   predictions = clf.predict([input.loc[i,:]])
+   predicted_probs = clf.predict_proba([input.loc[i,:]])
+
+   print("Observer thought species was:", taxon_id[i], " Predicted species is: ", predictions)
+   print("Prediction percentages", predicted_probs)
 
 #
 # # print(df)
