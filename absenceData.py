@@ -57,8 +57,8 @@ for index, row in ufi.iterrows():
 rng = np.random.RandomState(42)
 
 # # Generate some abnormal novel observations
-lat_outliers = rng.uniform(low=minLat, high=maxLat, size=(100 , 1))
-long_outliers = rng.uniform(low=minLong, high=maxLong, size=(100, 1))
+lat_outliers = rng.uniform(low=minLat, high=maxLat, size=(10000 , 1))
+long_outliers = rng.uniform(low=minLong, high=maxLong, size=(10000, 1))
 
 outliers = []
 for i in range(len(lat_outliers)):
@@ -66,7 +66,7 @@ for i in range(len(lat_outliers)):
     outliers.append(currentPoint)
 
 # fit the model
-clf = IsolationForest(behaviour='new', max_samples=6573,
+clf = IsolationForest(behaviour='new', max_samples=6528,
                     n_estimators = 300,
                     random_state=rng, contamination='auto')
 
@@ -132,9 +132,8 @@ worksheet.write('Y1', 'STREAMS')
 row = 1
 col = 0
 
-
 for index in range(len(y_pred_outliers)):
-    if y_pred_outliers[index] == -1:
+    if y_pred_outliers[index] == -1 and row < 6530:
         worksheet.write(row, col, taxonID)
         worksheet.write(row, col + 1, speciesName)
         worksheet.write(row, col + 2, 'Unreliable')
@@ -161,7 +160,6 @@ for index in range(len(y_pred_outliers)):
         worksheet.write(row, col + 22, outliers[index][18])
         worksheet.write(row, col + 23, outliers[index][19])
         worksheet.write(row, col + 24, outliers[index][20])
-        
         row += 1
 
 workbook.close()
