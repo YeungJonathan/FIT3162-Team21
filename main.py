@@ -1,87 +1,84 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from extract_environmental_variables import writeToFile
 
 def menu():
     print("# --------------------------------------------------------------------")
     print("#                      MAIN MENU                                      ")
     print("# --------------------------------------------------------------------")
     print("Note: in the future you can type 'python3 main.py <observations>' to directly get observation results")
-    print("1. Get reliability of observations")
-    print("2. Other")
-    concat_files()
 
+    # Input observations, run raster data through them
+    # writeToFile('input_observations.xlsx', 'testing.xlsx')
 
-def concat_files():
-    # filenames
-    # vba = pd.read_excel('VBA_Raster.xlsx')
-    #
-    # vba = vba.loc[vba['COMMON_NME'] == "Agile Antechinus"]
-    excel_names = ["agile.xlsx", "./absence_datas/agile_antechinus.xlsx"]
+    # output of input data after being raster'ed
+    input = pd.read_excel('testing.xlsx')
 
-    # read them in
-    excels = [pd.ExcelFile(name) for name in excel_names]
+    # VBA data- MODEL INFORMATION
+    df = pd.read_excel('./combined_data/combined_agile_antechinus.xlsx')  # VBA (training data)
 
-    # turn them into dataframes
-    frames = [x.parse(x.sheet_names[0], header=None, index_col=None) for x in excels]
+    # get rid of unneeded values (to improve accuracy of model)
 
-    # delete the first row for all frames except the first
-    # i.e. remove the header row -- assumes it's the first
-    frames[1:] = [df[1:] for df in frames[1:]]
+    del df['COMMON_NME']
+    del df['CDE_TYPE']
+    del df['RECORD_TYPE']
+    del df['RELIABILITY_TXT']
+    del df['SV_RECORD_COUNT']
 
-    # concatenate them..
-    combined = pd.concat(frames)
+    del input['COMMON_NME']
+    del input['CDE_TYPE']
+    del input['RECORD_TYPE']
+    del input['RELIABILITY_TXT']
+    del input['SV_RECORD_COUNT']
 
-    # write it out
-    combined.to_excel("combined_agile_antechinus.xlsx", header=False, index=False)
+    print(df.columns)
+    print(input.columns)
 
+    # del input['RECORD_TYPE']
 
-def print_graph():
-    # read excel files
-    vba = pd.read_excel('VBA_data.xls') # VBA (training data)
-    input = pd.read_excel('input_observations.xlsx') # input data (observations)
+    # get only agile antechinus values
+    # df = df[df['TAXON_ID'] == 11028]
 
-    species_names = vba['COMMON_NME'].unique()
+    df.RELIABILITY.replace(['Acceptable', 'Unconfirmed', 'Unreliable', 'Confirmed', 'High reliability'],
+                           [int(0), int(1), int(2), int(0), int(0)], inplace=True)
+    # fill na values with mean
+    df[df == np.inf] = np.nan
+    df.fillna(0, inplace=True)
 
-    print(species_names)
-    arr = ['Small Triggerplant', 'Common Beard-heath','Brown Treecreeper', 'Southern Brown Tree Frog', 'Agile Antechinus', 'White-browed Treecreeper']
-    vba.COMMON_NME.replace(['Small Triggerplant', 'Common Beard-heath','Brown Treecreeper', 'Southern Brown Tree Frog', 'Agile Antechinus', 'White-browed Treecreeper'],
-                           [0, 1, 2, 3, 4, 5], inplace=True)
+    input[input == np.inf] = np.nan
+    input.fillna(0, inplace=True)
 
-    df = vba[['COMMON_NME','LONGITUDEDD_NUM', 'LATITUDEDD_NUM']]
-    small_tiggerplant = df[df['COMMON_NME'] == 0]
-    common_beardheath = df[df['COMMON_NME'] == 1]
-    brown_treecreeper = df[df['COMMON_NME'] == 2]
-    southern_browntree = df[df['COMMON_NME'] == 3]
-    agile = df[df['COMMON_NME'] == 4]
-    white = df[df['COMMON_NME'] == 5]
+    # x data - columns
+    features = df[df.columns[1:len(df.columns)]]
 
-    print(df.head())
+    # y data - what we want to predict
+    y = df['RELIABILITY']
+    print("calculating observation result...")
+    # split to train/test dataset
+    X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.20)  # 70% training and 30% test
+    # build the classifier
+    clf = RandomForestClassifier(n_estimators=200)
 
-    show_on_map = [small_tiggerplant, common_beardheath, brown_treecreeper, southern_browntree, agile, white]
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
-    for i in range(len(show_on_map)):
-        show_on_map[i].plot(kind="scatter", x="LONGITUDEDD_NUM", y="LATITUDEDD_NUM", alpha=0.4)
+    # print accuracy and feature importance
+    print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+    print("Features importance", clf.feature_importances_)
+    print("Possible species", y.unique())
 
-    #vba.plot(kind="scatter", x="LONGITUDEDD_NUM", y="LATITUDEDD_NUM", alpha=0.4)
+    # print prediction
+    for i in range(len(input)):
+        # print(input.loc[i, :])
+        predictions = clf.predict([input.loc[i, :]])
+        predicted_probs = clf.predict_proba([input.loc[i, :]])
 
-    plt.show()
-
-    print(missing_values_table(vba))
-
-
-def missing_values_table(df):
-    mis_val = df.isnull().sum()
-    mis_val_percent = 100 * df.isnull().sum() / len(df)
-    mis_val_table = pd.concat([mis_val, mis_val_percent], axis=1)
-    mis_val_table_ren_columns = mis_val_table.rename(
-        columns={0: 'Missing Values', 1: '% of Total Values'})
-    mis_val_table_ren_columns = mis_val_table_ren_columns[
-        mis_val_table_ren_columns.iloc[:, 1] != 0].sort_values(
-        '% of Total Values', ascending=False).round(1)
-    print("Your selected dataframe has " + str(df.shape[1]) + " columns.\n"
-                                                              "There are " + str(mis_val_table_ren_columns.shape[0]) +
-          " columns that have missing values.")
-    return mis_val_table_ren_columns
+        print(" Predicted species is: ", predictions)
+        print("Prediction percentages", predicted_probs)
 
 if __name__ == "__main__":
     menu()
