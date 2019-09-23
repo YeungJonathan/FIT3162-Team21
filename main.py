@@ -1,42 +1,48 @@
 import pandas as pd
-import numpy as np
-from sklearn.datasets.species_distributions import construct_grids
-import graphviz 
-from sklearn import datasets, tree
 import matplotlib.pyplot as plt
-import geopy.distance
 
-# read excel files
-vba = pd.read_excel('VBA_data.xls') # VBA (training data)
-input = pd.read_excel('input_observations.xlsx') # input data (observations)
-#read input -> feed into one model
-# read input, based on species, seperate it into a specific model
+def menu():
+    print("# --------------------------------------------------------------------")
+    print("#                      MAIN MENU                                      ")
+    print("# --------------------------------------------------------------------")
+    print("Note: in the future you can type 'python3 main.py <observations>' to directly get observation results")
+    print("1. Get reliability of observations")
+    print("2. Other")
 
-species_names = vba['COMMON_NME'].unique()
 
-print(species_names)
-arr = ['Small Triggerplant', 'Common Beard-heath','Brown Treecreeper', 'Southern Brown Tree Frog', 'Agile Antechinus', 'White-browed Treecreeper']
-vba.COMMON_NME.replace(['Small Triggerplant', 'Common Beard-heath','Brown Treecreeper', 'Southern Brown Tree Frog', 'Agile Antechinus', 'White-browed Treecreeper'],
-                       [0, 1, 2, 3, 4, 5], inplace=True)
 
-df = vba[['COMMON_NME','LONGITUDEDD_NUM', 'LATITUDEDD_NUM']]
-small_tiggerplant = df[df['COMMON_NME'] == 0]
-common_beardheath = df[df['COMMON_NME'] == 1]
-brown_treecreeper = df[df['COMMON_NME'] == 2]
-southern_browntree = df[df['COMMON_NME'] == 3]
-agile = df[df['COMMON_NME'] == 4]
-white = df[df['COMMON_NME'] == 5]
+def print_graph():
+    # read excel files
+    vba = pd.read_excel('VBA_data.xls') # VBA (training data)
+    input = pd.read_excel('input_observations.xlsx') # input data (observations)
 
-print(df.head())
+    species_names = vba['COMMON_NME'].unique()
 
-show_on_map = [small_tiggerplant, common_beardheath, brown_treecreeper, southern_browntree, agile, white]
+    print(species_names)
+    arr = ['Small Triggerplant', 'Common Beard-heath','Brown Treecreeper', 'Southern Brown Tree Frog', 'Agile Antechinus', 'White-browed Treecreeper']
+    vba.COMMON_NME.replace(['Small Triggerplant', 'Common Beard-heath','Brown Treecreeper', 'Southern Brown Tree Frog', 'Agile Antechinus', 'White-browed Treecreeper'],
+                           [0, 1, 2, 3, 4, 5], inplace=True)
 
-for i in range(len(show_on_map)):
-    show_on_map[i].plot(kind="scatter", x="LONGITUDEDD_NUM", y="LATITUDEDD_NUM", alpha=0.4)
+    df = vba[['COMMON_NME','LONGITUDEDD_NUM', 'LATITUDEDD_NUM']]
+    small_tiggerplant = df[df['COMMON_NME'] == 0]
+    common_beardheath = df[df['COMMON_NME'] == 1]
+    brown_treecreeper = df[df['COMMON_NME'] == 2]
+    southern_browntree = df[df['COMMON_NME'] == 3]
+    agile = df[df['COMMON_NME'] == 4]
+    white = df[df['COMMON_NME'] == 5]
 
-#vba.plot(kind="scatter", x="LONGITUDEDD_NUM", y="LATITUDEDD_NUM", alpha=0.4)
+    print(df.head())
 
-plt.show()
+    show_on_map = [small_tiggerplant, common_beardheath, brown_treecreeper, southern_browntree, agile, white]
+
+    for i in range(len(show_on_map)):
+        show_on_map[i].plot(kind="scatter", x="LONGITUDEDD_NUM", y="LATITUDEDD_NUM", alpha=0.4)
+
+    #vba.plot(kind="scatter", x="LONGITUDEDD_NUM", y="LATITUDEDD_NUM", alpha=0.4)
+
+    plt.show()
+
+    print(missing_values_table(vba))
 
 
 def missing_values_table(df):
@@ -53,26 +59,5 @@ def missing_values_table(df):
           " columns that have missing values.")
     return mis_val_table_ren_columns
 
-print(missing_values_table(vba))
-
-# Create a list of buildings with more than 100 measurements
-# types = input.dropna(subset=['RELIABILITY'])
-# types = types['RECORD_TYPE'].value_counts()
-# types = list(types[types.values > 100].index)
-#
-# # Plot of distribution of scores for building categories
-# plt.figsize(12, 10)
-#
-# # Plot each building
-# for b_type in types:
-#     # Select the building type
-#     subset = input[input['RECORD_TYPE'] == b_type]
-#
-#     # Density plot of Energy Star scores
-#     sns.kdeplot(subset['RELIABILITY'].dropna(),
-#                 label=b_type, shade=False, alpha=0.8);
-#
-# # label the plot
-# plt.xlabel('Energy Star Score', size=20);
-# plt.ylabel('Density', size=20);
-# plt.title('Density Plot of Energy Star Scores by Building Type', size=28);
+if __name__ == "__main__":
+    menu()
