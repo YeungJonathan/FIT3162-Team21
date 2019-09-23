@@ -12,62 +12,64 @@ from extract_environmental_variables import writeToFile
 input = pd.read_excel('testing.xlsx')
 
 # VBA data- MODEL INFORMATION
-df = pd.read_excel('VBA_Raster.xlsx') # VBA (training data)
+df = pd.read_excel('./combined_data/combined_agile_antechinus.xlsx') # VBA (training data)
 
 # get rid of unneeded values (to improve accuracy of model)
-del df['RELIABILITY']
+
+
 del df['COMMON_NME']
+del df['CDE_TYPE']
+del df['RECORD_TYPE']
 del df['RELIABILITY_TXT']
 del df['SV_RECORD_COUNT']
-del df['WETNESS']
-del df['PROTECTION_INDEX']
 
-# del df['RECORD_TYPE']
-
-taxon_id = input['TAXON_ID']
-
-del input['TAXON_ID']
 del input['COMMON_NME']
-del input['WETNESS']
-del input['PROTECTION_INDEX']
+del input['CDE_TYPE']
+del input['RECORD_TYPE']
+del input['RELIABILITY_TXT']
+del input['SV_RECORD_COUNT']
 
 # del input['RECORD_TYPE']
 
 # get only agile antechinus values
 # df = df[df['TAXON_ID'] == 11028]
 
+
+df.RELIABILITY.replace(['Acceptable', 'Unconfirmed', 'Unreliable', 'Confirmed', 'High reliability'],
+                       [int(0), int(1), int(2), int(0), int(0)], inplace=True)
+
 # turn string values to numbers
-df.CDE_TYPE.replace(['FLORA', 'FAUNA'],
-                       [0, 1], inplace=True)
-
-input.CDE_TYPE.replace(['FLORA', 'FAUNA'],
-                       [0, 1], inplace=True)
-
-df.RECORD_TYPE.replace(['Seen', 'Observation', 'Captured and released', 'Heard', '#NUM!', 'Identified from hair or scats',
-                        'Observation with supporting evidence', 'Indirect evidence', 'Museum specimen', 'Pers. Comm.',
-                        'Monitored species', 'Captured', 'Literature'],
-                       [0, 1,2,3,4,5,6,7,8,9,10,11,12], inplace=True)
-
-input.RECORD_TYPE.replace(['Seen', 'Observation', 'Captured and released', 'Heard', '#NUM!', 'Identified from hair or scats',
-                           'Observation with supporting evidence', 'Indirect evidence', 'Museum specimen', 'Pers. Comm.',
-                           'Monitored species', 'Captured', 'Literature'],
-                       [0, 1,2,3,4,5,6,7,8,9,10,11,12], inplace=True)
-
+# df.CDE_TYPE.replace(['FLORA', 'FAUNA'],
+#                        [0, 1], inplace=True)
+#
+# input.CDE_TYPE.replace(['FLORA', 'FAUNA'],
+#                        [0, 1], inplace=True)
+#
+# df.RECORD_TYPE.replace(['Seen', 'Observation', 'Captured and released', 'Heard', '#NUM!', 'Identified from hair or scats',
+#                         'Observation with supporting evidence', 'Indirect evidence', 'Museum specimen', 'Pers. Comm.',
+#                         'Monitored species', 'Captured', 'Literature'],
+#                        [0, 1,2,3,4,5,6,7,8,9,10,11,12], inplace=True)
+#
+# input.RECORD_TYPE.replace(['Seen', 'Observation', 'Captured and released', 'Heard', '#NUM!', 'Identified from hair or scats',
+#                            'Observation with supporting evidence', 'Indirect evidence', 'Museum specimen', 'Pers. Comm.',
+#                            'Monitored species', 'Captured', 'Literature'],
+#                        [0, 1,2,3,4,5,6,7,8,9,10,11,12], inplace=True)
+#
 # fill na values with mean
 df[df==np.inf]=np.nan
-df.fillna(df.mean(), inplace=True)
+df.fillna(0, inplace=True)
 
 input[input==np.inf]=np.nan
-input.fillna(input.mean(), inplace=True)
+input.fillna(0, inplace=True)
 
 #x data - columns
 features = df[df.columns[1:len(df.columns)]]
 
 #y data - what we want to predict
-y=df['TAXON_ID']
+y=df['RELIABILITY']
 print("calculating observation result...")
 # split to train/test dataset
-X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.05) # 70% training and 30% test
+X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.20) # 70% training and 30% test
 #build the classifier
 clf = RandomForestClassifier(n_estimators=200)
 
@@ -85,7 +87,7 @@ for i in range(len(input)):
    predictions = clf.predict([input.loc[i,:]])
    predicted_probs = clf.predict_proba([input.loc[i,:]])
 
-   print("Observer thought species was:", taxon_id[i], " Predicted species is: ", predictions)
+   print(" Predicted species is: ", predictions)
    print("Prediction percentages", predicted_probs)
 
 #

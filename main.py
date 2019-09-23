@@ -8,7 +8,31 @@ def menu():
     print("Note: in the future you can type 'python3 main.py <observations>' to directly get observation results")
     print("1. Get reliability of observations")
     print("2. Other")
+    concat_files()
 
+
+def concat_files():
+    # filenames
+    # vba = pd.read_excel('VBA_Raster.xlsx')
+    #
+    # vba = vba.loc[vba['COMMON_NME'] == "Agile Antechinus"]
+    excel_names = ["agile.xlsx", "./absence_datas/agile_antechinus.xlsx"]
+
+    # read them in
+    excels = [pd.ExcelFile(name) for name in excel_names]
+
+    # turn them into dataframes
+    frames = [x.parse(x.sheet_names[0], header=None, index_col=None) for x in excels]
+
+    # delete the first row for all frames except the first
+    # i.e. remove the header row -- assumes it's the first
+    frames[1:] = [df[1:] for df in frames[1:]]
+
+    # concatenate them..
+    combined = pd.concat(frames)
+
+    # write it out
+    combined.to_excel("combined_agile_antechinus.xlsx", header=False, index=False)
 
 
 def print_graph():
