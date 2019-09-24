@@ -87,13 +87,13 @@ def generateAbsenceData(speciesName, outputFilePath):
     # plt.title("IsolationForest")
 
 
-    # b1 = plt.scatter(latList, longList, c='white',
+    # b1 = plt.scatter(longList, latList, c='white',
     #                  s=20, edgecolor='k')
-    # c = plt.scatter(y_predict_lat, y_predict_long, c='red',
+    # c = plt.scatter(y_predict_long, y_predict_lat, c='red',
     #                 s=20, edgecolor='k')
     # plt.axis('tight')
-    # plt.xlim((minLat, maxLat))
-    # plt.ylim((minLong, maxLong))
+    # plt.xlim((minLong, maxLong))
+    # plt.ylim((minLat, maxLat))
     # plt.legend([b1, c],
     #            ["training observations",
     #             "new regular observations", "new abnormal observations"],
