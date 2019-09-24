@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
-from extract_environmental_variables import writeToFile
+from process_observation_data import writeToFile
 
 """ Main Menu: Get's user input and executes the selected option"""
 def menu():
@@ -30,6 +30,7 @@ def menu():
         writeToFile("sample_input.xlsx", "sample_output.xlsx")
 
     else:
+
         print("Sorry. Invalid input. Valid options are: 1, 2")
 
 
@@ -79,7 +80,7 @@ def agileModel(input_file):
     X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.20)
 
     # build the classifier
-    clf = RandomForestClassifier(n_estimators=200)
+    clf = RandomForestClassifier(n_estimators=200, max_depth=5)
 
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
@@ -97,8 +98,13 @@ def agileModel(input_file):
         predictions = clf.predict([input.loc[i, :]])
         predicted_probs = clf.predict_proba([input.loc[i, :]])
 
-        print("\nFor row ", i, ". Overall reliability is: ", predictions)
-        print("Prediction percentages", predicted_probs)
+        if predicted_probs[0][0] > 0.70:
+            print("\nFor row ", i, ". The observation IS reliable")
+        else:
+            print("\nFor row ", i, ". The observation IS NOT reliable")
+
+       # print("\nFor row ", i, ". Overall reliability is: ", predictions)
+        print("Prediction percentages", predicted_probs[0])
 
 if __name__ == "__main__":
     menu()
