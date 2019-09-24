@@ -28,7 +28,6 @@ def concat_files():
 def print_graph():
     # read excel files
     vba = pd.read_excel('VBA_data.xls') # VBA (training data)
-    input = pd.read_excel('input_observations.xlsx') # input data (observations)
 
     species_names = vba['COMMON_NME'].unique()
 
