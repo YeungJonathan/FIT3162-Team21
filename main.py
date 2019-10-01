@@ -65,6 +65,8 @@ def test(input_file):
     for i in range(len(input)):
         # reads species name
         species = input.iloc[i, 1]
+        lat = input.iloc[i, 3]
+        long = input.iloc[i, 4]
 
         predicted_probs = None
 
@@ -82,16 +84,16 @@ def test(input_file):
         elif species == "White-browed Treecreeper":
             predicted_probs = white_browed_treecreeper.predict_proba([input.iloc[i, 2:]])
 
-        print(input.iloc[i, 1])
+        print("\n",species, "was seen at", lat, long)
 
         # if a species at a given location is predicted to be reliable x% of the time
         if predicted_probs[0][0] > 0.70:
-            print("\nFor row ", i, ". The observation IS reliable")
+            print(" The observation IS reliable")
         else:
-            print("\nFor row ", i, ". The observation IS NOT reliable")
+            print(" The observation IS NOT reliable")
 
         # print("\nFor row ", i, ". Overall reliability is: ", predictions)
-        print("Prediction percentages", predicted_probs[0])
+        print(" Prediction percentages", predicted_probs[0])
 
 
 """ Sample Agile Antechinus model using the random foresting method"""
