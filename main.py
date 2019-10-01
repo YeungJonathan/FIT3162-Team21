@@ -6,6 +6,13 @@ from sklearn.model_selection import train_test_split
 from process_observation_data import writeToFile
 import pickle
 
+agile_antechinus = pickle.load(open("./models/agile_model.pkl", 'rb'))
+beard_heath = pickle.load(open("./models/beard_heath_model.pkl", 'rb'))
+brown_treecreeper = pickle.load(open("./models/brown_treecreeper_model.pkl", 'rb'))
+small_triggerplant = pickle.load(open("./models/small_triggerplant.pkl", 'rb'))
+southern_brown_tree_frog = pickle.load(open("./models/southern_brown_tree_frog.pkl", 'rb'))
+white_browed_treecreeper = pickle.load(open("./models/white_browed_treecreeper.pkl", 'rb'))
+
 """ 
 Main Menu: Get's user input and executes the selected option. 
 The question the user will be asked is "has your observations data come pre-processed".
@@ -44,25 +51,40 @@ def menu():
 def test(input_file):
     input = pd.read_excel(input_file)
 
-    del input['TAXON_ID']
-    del input['COMMON_NME']
     del input['CDE_TYPE']
     del input['RECORD_TYPE']
 
     input[input == np.inf] = np.nan
     input.fillna(0, inplace=True)
 
-    clf = pickle.load(open("./models/agile_model.pkl", 'rb'))
-
-    print("Features importance", clf.feature_importances_)
+    #print("Features importance", clf.feature_importances_)
 
     print("\nPrinting reliability outcomes for the input file now...")
+    #print(input.iloc[0, 1:])
 
-    # print prediction
     for i in range(len(input)):
-        predictions = clf.predict([input.loc[i, :]])
-        predicted_probs = clf.predict_proba([input.loc[i, :]])
+        # reads species name
+        species = input.iloc[i, 1]
 
+        predicted_probs = None
+
+        # runs observation through appropriate species model
+        if species == "Agile Antechinus":
+            predicted_probs = agile_antechinus.predict_proba([input.iloc[i, 2:]])
+        elif species == "Common Beard-heath":
+            predicted_probs = beard_heath.predict_proba([input.iloc[i, 2:]])
+        elif species == "Small Triggerplant":
+            predicted_probs = small_triggerplant.predict_proba([input.iloc[i, 2:]])
+        elif species == "Southern Brown Tree Frog":
+            predicted_probs = southern_brown_tree_frog.predict_proba([input.iloc[i, 2:]])
+        elif species == "Brown Treecreeper":
+            predicted_probs = brown_treecreeper.predict_proba([input.iloc[i, 2:]])
+        elif species == "White-browed Treecreeper":
+            predicted_probs = white_browed_treecreeper.predict_proba([input.iloc[i, 2:]])
+
+        print(input.iloc[i, 1])
+
+        # if a species at a given location is predicted to be reliable x% of the time
         if predicted_probs[0][0] > 0.70:
             print("\nFor row ", i, ". The observation IS reliable")
         else:
@@ -77,7 +99,7 @@ def generate_model(input_file, training_file, pickle_name):
     # Input observations, run raster data through them
     # writeToFile('input_observations.xlsx', 'testing.xlsx')
 
-    print("Calculating reliability outcomes, please wait...")
+    print("Generating model, please wait...")
 
     # output of input data after being raster'ed
     input = pd.read_excel(input_file)

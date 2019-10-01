@@ -1,4 +1,4 @@
-from absenceData import generateAbsenceData
+from absence_datas.absenceData import generateAbsenceData
 
 generateAbsenceData('Agile Antechinus', 'absence_datas/agile_antechinus.xlsx')
 generateAbsenceData('Brown Treecreeper', 'absence_datas/brown_treecreeper.xlsx')
