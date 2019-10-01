@@ -52,7 +52,8 @@ def menu():
         file_name = input("File name: ")
 
         # note for the demo input: testing.xlsx
-        test(file_name)
+        # get reliability outcomes for observation file
+        get_reliability(file_name)
 
     # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
     elif data_preprocessed == "2":
@@ -66,29 +67,42 @@ def menu():
         print("Sorry. Invalid input. Valid options are: 1, 2")
 
 
-def test(input_file):
+"""
+Outputs the reliability for each observation in a file. For each species observation, it will be run through the
+appropriate model. For instance if the observation is for the species "Red Kangaroo", then the observation will be 
+processed through the Red Kangaroo model. We want to see how reliable an observation is, in the context of the species.
+
+@param input_file, a file containing a list of observations. i.e it was claimed the species "x", was seen at this 
+                   long/lat location
+"""
+def get_reliability(input_file):
+
+    # reads input file
     input = pd.read_excel(input_file)
 
+    # gets rid of unnecessary columns
     del input['CDE_TYPE']
     del input['RECORD_TYPE']
 
+    # fills in missing data
     input[input == np.inf] = np.nan
     input.fillna(0, inplace=True)
 
     #print("Features importance", clf.feature_importances_)
 
-    print("\nPrinting reliability outcomes for the input file now...")
-    #print(input.iloc[0, 1:])
-
+    # iterates through each row in the excel file
     for i in range(len(input)):
-        # reads species name
+        # reads species name, as well as long/lat location
         species = input.iloc[i, 1]
         lat = input.iloc[i, 3]
         long = input.iloc[i, 4]
 
+        # the likelihood of an observation being reliable
         predicted_probs = None
 
         # runs observation through appropriate species model
+        # for instance if the observation is for the species "Agile Antechinus", then the observation will be processed
+        # through the Agile Antechinus model
         if species == "Agile Antechinus":
             predicted_probs = agile_antechinus.predict_proba([input.iloc[i, 2:]])
         elif species == "Common Beard-heath":
@@ -102,6 +116,7 @@ def test(input_file):
         elif species == "White-browed Treecreeper":
             predicted_probs = white_browed_treecreeper.predict_proba([input.iloc[i, 2:]])
 
+        # For instance, the Frog was seen at -38.123, 144.1293
         print("\n",species, "was seen at", lat, long)
 
         # if a species at a given location is predicted to be reliable x% of the time
@@ -110,7 +125,7 @@ def test(input_file):
         else:
             print(" The observation IS NOT reliable")
 
-        # print("\nFor row ", i, ". Overall reliability is: ", predictions)
+        # How the decision tree was split
         print(" Prediction percentages", predicted_probs[0])
 
 
@@ -169,25 +184,10 @@ def generate_model(input_file, training_file, pickle_name):
     pickle.dump(clf, open(pickle_name, 'wb'))
 
     # print accuracy and feature importance
-    print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
-    print("Features importance", clf.feature_importances_)
-    print("Possible reliability outcomes are: ", y.unique())
+    #print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+    #print("Features importance", clf.feature_importances_)
+    #print("Possible reliability outcomes are: ", y.unique())
 
-    print("\nPrinting reliability outcomes for the input file now...")
-
-    # print prediction
-    for i in range(len(input)):
-        # print(input.loc[i, :])
-        predictions = clf.predict([input.loc[i, :]])
-        predicted_probs = clf.predict_proba([input.loc[i, :]])
-
-        if predicted_probs[0][0] > 0.70:
-            print("\nFor row ", i, ". The observation IS reliable")
-        else:
-            print("\nFor row ", i, ". The observation IS NOT reliable")
-
-       # print("\nFor row ", i, ". Overall reliability is: ", predictions)
-        print("Prediction percentages", predicted_probs[0])
-
+    print("Finished generating model!!")
 if __name__ == "__main__":
     menu()
