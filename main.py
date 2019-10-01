@@ -6,6 +6,9 @@ from sklearn.model_selection import train_test_split
 from process_observation_data import writeToFile
 import pickle
 
+"""
+Models: they are already generated, we are simply loading them in from memory
+"""
 agile_antechinus = pickle.load(open("./models/agile_model.pkl", 'rb'))
 beard_heath = pickle.load(open("./models/beard_heath_model.pkl", 'rb'))
 brown_treecreeper = pickle.load(open("./models/brown_treecreeper_model.pkl", 'rb'))
@@ -16,11 +19,21 @@ white_browed_treecreeper = pickle.load(open("./models/white_browed_treecreeper.p
 """ 
 Main Menu: Get's user input and executes the selected option. 
 The question the user will be asked is "has your observations data come pre-processed".
+This means:
+- does the observation file contain corresponding environmental variables that are tied to a location
+- or in other words, has the observation file been processed through the raster function
 
+For instance a file where a row contains SPECIES | LONG | LAT, and no corresponding environmental variables
+tied to the long/lat location would NOT be considered pre-processed. 
+
+Whereas a file where a row contains SPECIES | LONG | LAT | WETNESS | RAINFALL | HEAT would be considered
+pre-processed as variables such as wetness/rainfall/heat are environmental variables, signifying that the
+file HAS been run through the raster function.
 """
 def menu():
     #generate_model('sample_output.xlsx', './combined_data/combined_white_browed_treecreeper.xlsx', "white_browed_treecreeper.pkl")
 
+    # Main Menu: asks if observation file comes pre-processed
     print("# --------------------------------------------------------------------")
     print("#                      MAIN MENU                                      ")
     print("# --------------------------------------------------------------------")
@@ -29,8 +42,11 @@ def menu():
     print("Has your observations data come pre-processed? ")
     print("1. Yes")
     print("2. No")
+
+    # user enters their response
     data_preprocessed = input("Enter response: ")
 
+    # YES: the excel file is pre-processed, environmental variables are tied to a location
     if data_preprocessed == "1":
         print("What is the name of your observations file? Note: Accepted formats: xlsx/xls")
         file_name = input("File name: ")
@@ -38,11 +54,13 @@ def menu():
         # note for the demo input: testing.xlsx
         test(file_name)
 
+    # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
     elif data_preprocessed == "2":
         print("Alright! Pre-processing the data now. NOTE: this may take a while. Please allow a few minutes.")
         print("Input file will be sample_input.xlsx, output will be sample_output.xlsx")
         writeToFile("sample_input.xlsx", "sample_output.xlsx")
 
+    # invalid response by the user
     else:
 
         print("Sorry. Invalid input. Valid options are: 1, 2")
