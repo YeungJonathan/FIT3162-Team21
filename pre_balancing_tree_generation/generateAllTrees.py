@@ -1,4 +1,4 @@
-from unused_models.decisionTree import generateTree
+from pre_balancing_tree_generation.decisionTree import generateTree
 
 generateTree("Agile Antechinus")
 generateTree("Brown Treecreeper")

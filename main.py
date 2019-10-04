@@ -129,7 +129,15 @@ def get_reliability(input_file):
         print(" Prediction percentages", predicted_probs[0])
 
 
-""" Sample Agile Antechinus model using the random foresting method"""
+""" 
+Generates a model for a particular species. The model will be stored in a 'pkl' file.
+@param input_file, observations file. Each row for a given observation will be given a reliability rating. This param 
+       isn't really needed for the generation of the model, but is a good visualisation tool
+@param training file, contains information about a particular species. We will be using this information in order to
+       train our file
+@param pickle_name, the name that our model will be called. We are storing the model locally, so that we do not need to
+       regenerate the model everytime.
+"""
 def generate_model(input_file, training_file, pickle_name):
     # Input observations, run raster data through them
     # writeToFile('input_observations.xlsx', 'testing.xlsx')

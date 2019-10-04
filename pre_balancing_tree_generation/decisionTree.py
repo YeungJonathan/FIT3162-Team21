@@ -69,5 +69,5 @@ def generateTree(species):
     tree.plot_tree(clf.fit(data_list, target_list)) 
     dot_data = tree.export_graphviz(clf, out_file=None, filled=True, rounded=True, special_characters=True)  
     graph = graphviz.Source(dot_data)
-    renderPath = "./decisionTree/" + species 
+    renderPath = "./decision_tree_visualisation/" + species
     graph.render(renderPath)
