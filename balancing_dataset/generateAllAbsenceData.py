@@ -1,4 +1,4 @@
-from absence_datas.absenceData import generateAbsenceData
+from balancing_dataset.absenceData import generateAbsenceData
 
 generateAbsenceData('Agile Antechinus', 'absence_datas/agile_antechinus.xlsx')
 generateAbsenceData('Brown Treecreeper', 'absence_datas/brown_treecreeper.xlsx')

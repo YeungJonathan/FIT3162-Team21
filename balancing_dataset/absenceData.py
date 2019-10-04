@@ -1,9 +1,8 @@
 import numpy as np
 import pandas as pd
 import xlsxwriter
-import matplotlib.pyplot as plt
 from sklearn.ensemble import IsolationForest
-from pseudo_absence_raster import findRaster
+from balancing_dataset.pseudo_absence_raster import findRaster
 
 def generateAbsenceData(speciesName, outputFilePath):
     vba = pd.read_excel('VBA_Raster.xlsx') # VBA (training data)

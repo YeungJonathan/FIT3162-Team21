@@ -1,13 +1,5 @@
 from osgeo import gdal
-from osgeo import osr
-from osgeo import ogr
 from pyproj import Proj, transform
-import pandas as pd
-import numpy as np
-import rasterio
-import rasterio.features
-import rasterio.warp
-import xlsxwriter
 
 def changeCoordinateSystem(point):
     inProj = Proj(init='epsg:4326')
