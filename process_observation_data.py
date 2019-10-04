@@ -3,7 +3,20 @@ from pyproj import Proj, transform
 import pandas as pd
 import xlsxwriter
 
+"""
+A volunteers observation does not come with raster information (associated environmental variables). After being run 
+through this function, it will.
+
+@param input_file, contains volunteers observations (does not come with raster information)
+@param output_file, the name of our output file. This will contain volunteers observations WITH raster information.
+"""
 def writeToFile(input_file, output_file):
+    """
+    Make a particular point be of the same coordinate system. In this instance we are converting a point using the
+    coordinate system epsg:4326 to the coordinate system epsg:3111
+
+    @param point, the point that we would like to convert (to a different coordinate system)
+    """
     def changeCoordinateSystem(point):
         inProj = Proj(init='epsg:4326')
         outProj = Proj(init='epsg:3111')
@@ -11,6 +24,16 @@ def writeToFile(input_file, output_file):
 
         return (x2, y2)
 
+    """
+    Calculates information about the environmental variable associated at a particular location point.
+
+    @param point, a (long/lat) location point.
+    @param yOri, y origins of the raster file
+    @param xOri, x origins of the raster file
+    @param type, the environmental variable (raster type) being calculated. i.e this may be wetness, vegetation, ect.
+    @param pixw, pixel width of the raster file
+    @param pixh, pixel height of the raster file
+    """
     def calculateRaster(point, yOri, xOri, type, pixw, pixh):
         col = int((point[0] - xOri) / pixw)
         row = int((yOri - point[1]) / pixh)
@@ -376,8 +399,11 @@ def writeToFile(input_file, output_file):
     streams = band.ReadAsArray(0, 0, cols, rows)
 
     # --------------------------------------------------------------------
+    #  WRITE INFORMATION TO EXCEL FILE
+    # --------------------------------------------------------------------
 
-    input = pd.read_excel(input_file) # input data (observations)
+    # information that we will retain
+    input = pd.read_excel(input_file)    # input data (observations)
     taxon_id = input['TAXON_ID']
     species = input['COMMON_NME']
     lat = input['LATITUDEDD_NUM']
@@ -420,13 +446,16 @@ def writeToFile(input_file, output_file):
     worksheet.write('Y1', 'STREAMS')
     worksheet.write('Z1', 'CDE_TYPE')
 
-    row = 1
-    col = 0
+    row = 1     # starting row
+    col = 0     # starting column
 
+    # write information to excel file
     for idx, val in enumerate(species):
-        #print(species[idx], lat[idx], long[idx])
+
+        # coordinate point that we want to pass through all the raster files/environmental attributes
         point = changeCoordinateSystem((long[idx], lat[idx]))
 
+        # original data we are retaining (from dataset)
         worksheet.write(row, col, taxon_id[idx])
         worksheet.write(row, col + 1, species[idx])
         worksheet.write(row, col + 2, reliability[idx])
