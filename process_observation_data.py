@@ -43,7 +43,7 @@ def writeToFile(input_file, output_file):
     # --------------------------------------------------------------------
     #      1. VEG
     # --------------------------------------------------------------------
-    dataset = gdal.Open('../raster/vegtype3_4/vegtype3_4')
+    dataset = gdal.Open('./raster/vegtype3_4/vegtype3_4')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -62,7 +62,7 @@ def writeToFile(input_file, output_file):
     #      2. WETNESS
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/wetness_index_saga_sept2012/wetness_index_saga_sept2012')
+    dataset = gdal.Open('./raster/wetness_index_saga_sept2012/wetness_index_saga_sept2012')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -81,7 +81,7 @@ def writeToFile(input_file, output_file):
     #      3. SUMMER 1
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/SummerPre1750Landsat75_300_900m/SummerPre1750Landsat75_300_900m')
+    dataset = gdal.Open('./raster/SummerPre1750Landsat75_300_900m/SummerPre1750Landsat75_300_900m')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -99,7 +99,7 @@ def writeToFile(input_file, output_file):
     # --------------------------------------------------------------------
     #      4. SUMMER 2
     # --------------------------------------------------------------------
-    dataset = gdal.Open('../raster/SummerLandsat75_300_900m/SummerLandsat75_300_900m')
+    dataset = gdal.Open('./raster/SummerLandsat75_300_900m/SummerLandsat75_300_900m')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -117,7 +117,7 @@ def writeToFile(input_file, output_file):
     #      5. RAINFALL JULY
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/sept2014JulRainfall/sept2014JulRainfall')
+    dataset = gdal.Open('./raster/sept2014JulRainfall/sept2014JulRainfall')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -136,7 +136,7 @@ def writeToFile(input_file, output_file):
     #      6. RAINFALL JAN
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/sept2014JulRainfall/sept2014JulRainfall')
+    dataset = gdal.Open('./raster/sept2014JulRainfall/sept2014JulRainfall')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -155,7 +155,7 @@ def writeToFile(input_file, output_file):
     #      7. MINTEMP JUL
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/sept2014JulMinTemp/sept2014JulMinTemp')
+    dataset = gdal.Open('./raster/sept2014JulMinTemp/sept2014JulMinTemp')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -174,7 +174,7 @@ def writeToFile(input_file, output_file):
     #      8. MAXTEMP JAN
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/sept2014JanMaxTemp/sept2014JanMaxTemp')
+    dataset = gdal.Open('./raster/sept2014JanMaxTemp/sept2014JanMaxTemp')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -192,7 +192,7 @@ def writeToFile(input_file, output_file):
     #      9. RADIOMETRICS th
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/Radiometrics_2014_th/Radiometrics_2014_th')
+    dataset = gdal.Open('./raster/Radiometrics_2014_th/Radiometrics_2014_th')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -211,7 +211,7 @@ def writeToFile(input_file, output_file):
     #      10. RADIOMETRICS k
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/Radiometrics_2014_k/Radiometrics_2014_k')
+    dataset = gdal.Open('./raster/Radiometrics_2014_k/Radiometrics_2014_k')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -230,7 +230,7 @@ def writeToFile(input_file, output_file):
     #      11. PROTECTION INDEX
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/ProtectionIndex/ProtectionIndex')
+    dataset = gdal.Open('./raster/ProtectionIndex/ProtectionIndex')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -249,7 +249,7 @@ def writeToFile(input_file, output_file):
     #      12. VERTICAL DISTANCE
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/log_vertical_distance_saline_wetlands_sept2012/log_vertical_distance_saline_wetlands_sept2012')
+    dataset = gdal.Open('./raster/log_vertical_distance_saline_wetlands_sept2012/log_vertical_distance_saline_wetlands_sept2012')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -268,7 +268,7 @@ def writeToFile(input_file, output_file):
     #      13. LAND COVER
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/land_cov_use3/land_cov_use3')
+    dataset = gdal.Open('./raster/land_cov_use3/land_cov_use3')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -287,7 +287,7 @@ def writeToFile(input_file, output_file):
     #      14. IBRA HEX
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/ibra_hex/ibra_hex')
+    dataset = gdal.Open('./raster/ibra_hex/ibra_hex')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -306,7 +306,7 @@ def writeToFile(input_file, output_file):
     #      15. HYDRA
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/hydro500xwi/hydro500xwi')
+    dataset = gdal.Open('./raster/hydro500xwi/hydro500xwi')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -325,7 +325,7 @@ def writeToFile(input_file, output_file):
     #      16. ECO REGION 1
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/ecoregion1750/ecoregion1750')
+    dataset = gdal.Open('./raster/ecoregion1750/ecoregion1750')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -344,7 +344,7 @@ def writeToFile(input_file, output_file):
     #      17. ECO REGION 2
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/ecoregion2014/ecoregion2014')
+    dataset = gdal.Open('./raster/ecoregion2014/ecoregion2014')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -363,7 +363,7 @@ def writeToFile(input_file, output_file):
     #      18. HEATING
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/Anisotrophic_Heating_Ruggedness/Anisotrophic_Heating_Ruggedness')
+    dataset = gdal.Open('./raster/Anisotrophic_Heating_Ruggedness/Anisotrophic_Heating_Ruggedness')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
@@ -383,7 +383,7 @@ def writeToFile(input_file, output_file):
     #      19. STREAMS
     # --------------------------------------------------------------------
 
-    dataset = gdal.Open('../raster/75m_dem_streams_burned_sept2012/75m_dem_streams_burned_sept2012')
+    dataset = gdal.Open('./raster/75m_dem_streams_burned_sept2012/75m_dem_streams_burned_sept2012')
     band = dataset.GetRasterBand(1)
 
     cols = dataset.RasterXSize
