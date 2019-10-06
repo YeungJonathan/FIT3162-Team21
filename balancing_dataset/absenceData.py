@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 import xlsxwriter
 from sklearn.ensemble import IsolationForest
-from balancing_dataset.pseudo_absence_raster import findRaster
+from pseudo_absence_raster import findRaster
 
 def generateAbsenceData(speciesName, outputFilePath):
-    vba = pd.read_excel('VBA_Raster.xlsx') # VBA (training data)
+    vba = pd.read_excel('../VBA_Raster.xlsx') # VBA (training data)
     allLat = vba["LATITUDEDD_NUM"]
     allLong = vba["LONGITUDEDD_NUM"]
 
