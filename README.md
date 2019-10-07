@@ -31,6 +31,14 @@ pip install pandas
 pip install sklearn
 ```
 
+# Running the program
+To execute the CLI to input observation points, run
+```
+python main.py
+```
+
+**Make sure you are in the root directory when running.**
+
 # Visualised Decision Tree
 - execute main.py
 - visualised tree in vba.pdf
