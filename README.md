@@ -51,7 +51,3 @@ Solution: pip install xlrd
 # Note to the developers:
 Please do not commit and push the raster data files to git. (for example vegtype3_4)
 Just add it to your local as the size of it is too big. 
-
-# ToDo
-- Separate decision trees based on different species
-- Handle raster data with QGIS
