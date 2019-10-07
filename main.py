@@ -5,6 +5,7 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from process_observation_data import writeToFile
 import pickle
+import sys
 
 """
 Models: they are already generated, we are simply loading them in from memory
@@ -39,7 +40,7 @@ def menu():
     print("# --------------------------------------------------------------------")
     print("Note: this program can be run via command line by typing 'python3 main.py <observations>'. ")
     print("\nHello! Today we'll be processing OBSERVATIONS and displaying their corresponding RELIABILITY outcomes.")
-    print("Has your observations data come pre-processed? ")
+    print("Has your observations data come pre-processed with raster files?")
     print("1. Yes")
     print("2. No")
 
@@ -49,7 +50,7 @@ def menu():
     # YES: the excel file is pre-processed, environmental variables are tied to a location
     if data_preprocessed == "1":
         print("What is the name of your observations file? Note: Accepted formats: xlsx/xls")
-        file_name = input("File name: ")
+        file_name = input("File name (path): ")
 
         # note for the demo input: testing.xlsx
         # get reliability outcomes for observation file
@@ -57,13 +58,27 @@ def menu():
 
     # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
     elif data_preprocessed == "2":
+        correctPath = False
+        while not correctPath:
+            try:
+                fileInput = input("File name (path): ")
+                a = pd.read_excel(fileInput)
+                correctPath = True
+            except:
+                print("Wrong input, please input the correct file path");
         print("Alright! Pre-processing the data now. NOTE: this may take a while. Please allow a few minutes.")
-        print("Input file will be sample_input.xlsx, output will be sample_output.xlsx")
-        writeToFile("sample_input.xlsx", "sample_output.xlsx")
-
+        print("Output will be stored in preprocess_output.xlsx")
+        try:
+            writeToFile(fileInput, "preprocess_output.xlsx")
+            get_reliability("preprocess_output.xlsx")
+        except:
+            print()
+            print("Error parsing File")
+            print("Please make sure that your input excel file consist of the below columns only:")
+            print("TAXON_ID, COMMON_NAME, RELIABILITY(EMPTY), LATITUDEDD_NUM, LONGITUDEDD_NUM, RECORD_TYPE, PRIMARY_CDE")
+            sys.exit(0)
     # invalid response by the user
     else:
-
         print("Sorry. Invalid input. Valid options are: 1, 2")
 
 
@@ -85,7 +100,7 @@ def get_reliability(input_file):
             inputCorrect = True
         except:
             print("Wrong input, please input the correct file path")
-            input_file = input("File name: ")
+            input_file = input("File name (path): ")
 
     # gets rid of unnecessary columns
     del file['CDE_TYPE']
