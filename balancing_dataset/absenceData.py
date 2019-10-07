@@ -3,9 +3,11 @@ import pandas as pd
 import xlsxwriter
 from sklearn.ensemble import IsolationForest
 from pseudo_absence_raster import findRaster
+import matplotlib.pyplot as plt
+
 
 def generateAbsenceData(speciesName, outputFilePath):
-    vba = pd.read_excel('../VBA_Raster.xlsx') # VBA (training data)
+    vba = pd.read_excel('./VBA_Raster.xlsx') # VBA (training data)
     allLat = vba["LATITUDEDD_NUM"]
     allLong = vba["LONGITUDEDD_NUM"]
 
@@ -83,10 +85,8 @@ def generateAbsenceData(speciesName, outputFilePath):
     #########################################################################################
     # xx, yy = np.meshgrid(np.linspace(minLat, maxLat, 50), np.linspace(minLong, maxLong, 50))
 
-    # plt.title("IsolationForest")
-
-
-    # b1 = plt.scatter(longList, latList, c='white',
+    # plt.title(speciesName + " IsolationForest")
+    # b1 = plt.scatter(longList, latList, c='blue',
     #                  s=20, edgecolor='k')
     # c = plt.scatter(y_predict_long, y_predict_lat, c='red',
     #                 s=20, edgecolor='k')
