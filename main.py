@@ -77,25 +77,32 @@ processed through the Red Kangaroo model. We want to see how reliable an observa
 """
 def get_reliability(input_file):
 
-    # reads input file
-    input = pd.read_excel(input_file)
+    inputCorrect = False
+    while not inputCorrect:
+        try:
+            # reads input file
+            file = pd.read_excel(input_file)
+            inputCorrect = True
+        except:
+            print("Wrong input, please input the correct file path")
+            input_file = input("File name: ")
 
     # gets rid of unnecessary columns
-    del input['CDE_TYPE']
-    del input['RECORD_TYPE']
+    del file['CDE_TYPE']
+    del file['RECORD_TYPE']
 
     # fills in missing data
-    input[input == np.inf] = np.nan
-    input.fillna(0, inplace=True)
+    file[file == np.inf] = np.nan
+    file.fillna(0, inplace=True)
 
     #print("Features importance", clf.feature_importances_)
 
     # iterates through each row in the excel file
-    for i in range(len(input)):
+    for i in range(len(file)):
         # reads species name, as well as long/lat location
-        species = input.iloc[i, 1]
-        lat = input.iloc[i, 3]
-        long = input.iloc[i, 4]
+        species = file.iloc[i, 1]
+        lat = file.iloc[i, 3]
+        long = file.iloc[i, 4]
 
         # the likelihood of an observation being reliable
         predicted_probs = None
@@ -104,17 +111,17 @@ def get_reliability(input_file):
         # for instance if the observation is for the species "Agile Antechinus", then the observation will be processed
         # through the Agile Antechinus model
         if species == "Agile Antechinus":
-            predicted_probs = agile_antechinus.predict_proba([input.iloc[i, 2:]])
+            predicted_probs = agile_antechinus.predict_proba([file.iloc[i, 2:]])
         elif species == "Common Beard-heath":
-            predicted_probs = beard_heath.predict_proba([input.iloc[i, 2:]])
+            predicted_probs = beard_heath.predict_proba([file.iloc[i, 2:]])
         elif species == "Small Triggerplant":
-            predicted_probs = small_triggerplant.predict_proba([input.iloc[i, 2:]])
+            predicted_probs = small_triggerplant.predict_proba([file.iloc[i, 2:]])
         elif species == "Southern Brown Tree Frog":
-            predicted_probs = southern_brown_tree_frog.predict_proba([input.iloc[i, 2:]])
+            predicted_probs = southern_brown_tree_frog.predict_proba([file.iloc[i, 2:]])
         elif species == "Brown Treecreeper":
-            predicted_probs = brown_treecreeper.predict_proba([input.iloc[i, 2:]])
+            predicted_probs = brown_treecreeper.predict_proba([file.iloc[i, 2:]])
         elif species == "White-browed Treecreeper":
-            predicted_probs = white_browed_treecreeper.predict_proba([input.iloc[i, 2:]])
+            predicted_probs = white_browed_treecreeper.predict_proba([file.iloc[i, 2:]])
 
         # For instance, the Frog was seen at -38.123, 144.1293
         print("\n",species, "was seen at", lat, long)

@@ -112,5 +112,4 @@ class TestPseudoAbsenceDataLength(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    # test_absencedata_generation()
     
