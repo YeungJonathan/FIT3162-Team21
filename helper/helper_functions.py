@@ -70,4 +70,5 @@ def missing_values_table(df):
     print("Your selected dataframe has " + str(df.shape[1]) + " columns.\n"
                                                               "There are " + str(mis_val_table_ren_columns.shape[0]) +
           " columns that have missing values.")
+    print(mis_val_table_ren_columns)
     return mis_val_table_ren_columns
