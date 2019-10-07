@@ -499,7 +499,6 @@ def writeToFile(input_file, output_file):
         worksheet.write(row, col + 25, cde[idx])
 
         row += 1
-        print("row", idx, "processed")
 
 
     workbook.close()
