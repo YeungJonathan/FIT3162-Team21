@@ -40,12 +40,14 @@ def menu():
     print("# --------------------------------------------------------------------")
     print("Note: this program can be run via command line by typing 'python3 main.py <observations>'. ")
     print("\nHello! Today we'll be processing OBSERVATIONS and displaying their corresponding RELIABILITY outcomes.")
-    print("Has your observations data come pre-processed with raster files?")
+    print("Has your observations data come pre-processed with raster files? "
+          "(i.e is each observation linked with environmental variables?)")
     print("1. Yes")
     print("2. No")
+    print("3. Other option: I want to generate/re-train a species model instead.")
 
     # user enters their response
-    data_preprocessed = input("Enter response: ")
+    data_preprocessed = input("\nEnter response: ")
 
     # YES: the excel file is pre-processed, environmental variables are tied to a location
     if data_preprocessed == "1":
@@ -77,6 +79,11 @@ def menu():
             print("Please make sure that your input excel file consist of the below columns only:")
             print("TAXON_ID, COMMON_NAME, RELIABILITY(EMPTY), LATITUDEDD_NUM, LONGITUDEDD_NUM, RECORD_TYPE, PRIMARY_CDE")
             sys.exit(0)
+    elif data_preprocessed == "3":
+        dataset_path = input("Enter dataset path: ")    # './balancing_dataset/excel_files/combined_data/combined_white_browed_treecreeper.xlsx'
+        model_name = input("Name of the model: ")   # <name.pkl>
+        generate_model(dataset_path, model_name)
+
     # invalid response by the user
     else:
         print("Sorry. Invalid input. Valid options are: 1, 2")
@@ -160,14 +167,11 @@ Generates a model for a particular species. The model will be stored in a 'pkl' 
 @param pickle_name, the name that our model will be called. We are storing the model locally, so that we do not need to
        regenerate the model everytime.
 """
-def generate_model(input_file, training_file, pickle_name):
+def generate_model(training_file, pickle_name):
     # Input observations, run raster data through them
     # writeToFile('input_observations.xlsx', 'testing.xlsx')
 
     print("Generating model, please wait...")
-
-    # output of input data after being raster'ed
-    input = pd.read_excel(input_file)
 
     # VBA data- MODEL INFORMATION
     df = pd.read_excel(training_file)  # VBA (training data)
@@ -179,11 +183,6 @@ def generate_model(input_file, training_file, pickle_name):
     del df['RELIABILITY_TXT']
     del df['SV_RECORD_COUNT']
 
-    del input['TAXON_ID']
-    del input['COMMON_NME']
-    del input['CDE_TYPE']
-    del input['RECORD_TYPE']
-
     # replace text values to numerical (for model processing
     df.RELIABILITY.replace(['Acceptable', 'Unconfirmed', 'Unreliable', 'Confirmed', 'High reliability'],
                            [int(0), int(1), int(2), int(0), int(0)], inplace=True)
@@ -191,9 +190,6 @@ def generate_model(input_file, training_file, pickle_name):
     # fill n/a values - all values need to be filled for model processing
     df[df == np.inf] = np.nan
     df.fillna(0, inplace=True)
-
-    input[input == np.inf] = np.nan
-    input.fillna(0, inplace=True)
 
     # x data - columns
     features = df[df.columns[1:len(df.columns)]]
@@ -215,9 +211,8 @@ def generate_model(input_file, training_file, pickle_name):
 
     # print accuracy and feature importance
     #print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
-    #print("Features importance", clf.feature_importances_)
     #print("Possible reliability outcomes are: ", y.unique())
 
-    print("Finished generating model!!")
+    print("Finished generating model!! Your model is called ", pickle_name)
 if __name__ == "__main__":
     menu()
