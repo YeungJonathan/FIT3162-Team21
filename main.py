@@ -32,7 +32,6 @@ pre-processed as variables such as wetness/rainfall/heat are environmental varia
 file HAS been run through the raster function.
 """
 def menu():
-    #generate_model('sample_output.xlsx', './combined_data/combined_white_browed_treecreeper.xlsx', "white_browed_treecreeper.pkl")
 
     # Main Menu: asks if observation file comes pre-processed
     print("# --------------------------------------------------------------------")
@@ -185,7 +184,7 @@ def generate_model(training_file, pickle_name):
 
     # replace text values to numerical (for model processing
     df.RELIABILITY.replace(['Acceptable', 'Unconfirmed', 'Unreliable', 'Confirmed', 'High reliability'],
-                           [int(0), int(1), int(2), int(0), int(0)], inplace=True)
+                           [int(0), int(1), int(1), int(0), int(0)], inplace=True)
 
     # fill n/a values - all values need to be filled for model processing
     df[df == np.inf] = np.nan
