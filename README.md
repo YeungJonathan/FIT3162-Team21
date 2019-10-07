@@ -48,7 +48,7 @@ Do you have the following errors when running our project?
 Error 1: ImportError: Install xlrd >= 0.9.0 for Excel support  
 Solution: pip install xlrd
 
-# Not to the developers:
+# Note to the developers:
 Please do not commit and push the raster data files to git. (for example vegtype3_4)
 Just add it to your local as the size of it is too big. 
 
