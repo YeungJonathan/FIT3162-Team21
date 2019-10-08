@@ -41,7 +41,7 @@ def menu():
         print("\nPlease select your choice:")
         print("1. Process observations (data is pre-processed)")
         print("2. Process observations (data is NOT pre-processed)")
-        print("3. Generate/re-train a species model instead.")
+        print("3. Generate/re-train a species model")
         print("4. Exit Program")
 
         # user enters their response
@@ -77,6 +77,7 @@ def menu():
                 print("Please make sure that your input excel file consist of the below columns only:")
                 print("TAXON_ID, COMMON_NAME, RELIABILITY(EMPTY), LATITUDEDD_NUM, LONGITUDEDD_NUM, RECORD_TYPE, PRIMARY_CDE")
                 sys.exit(0)
+        # GENERATE/Re-train model
         elif data_preprocessed == "3":
             path = "./balancing_dataset/excel_files/combined_data/"
 
@@ -98,6 +99,7 @@ def menu():
             choice = input("Enter choice: ")
 
             generate_model(models[choice][0], models[choice][1])
+        # exit program
         elif data_preprocessed == "4":
             break
         # invalid response by the user
