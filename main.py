@@ -33,59 +33,76 @@ file HAS been run through the raster function.
 """
 def menu():
 
-    # Main Menu: asks if observation file comes pre-processed
-    print("# --------------------------------------------------------------------")
-    print("#                      MAIN MENU                                      ")
-    print("# --------------------------------------------------------------------")
-    print("Note: this program can be run via command line by typing 'python3 main.py <observations>'. ")
-    print("\nHello! Today we'll be processing OBSERVATIONS and displaying their corresponding RELIABILITY outcomes.")
-    print("Has your observations data come pre-processed with raster files? "
-          "(i.e is each observation linked with environmental variables?)")
-    print("1. Yes")
-    print("2. No")
-    print("3. Other option: I want to generate/re-train a species model instead.")
+    while True:
+        # Main Menu: asks if observation file comes pre-processed
+        print("\n# --------------------------------------------------------------------")
+        print("#                      MAIN MENU                                      ")
+        print("# --------------------------------------------------------------------")
+        print("\nPlease select your choice:")
+        print("1. Process observations (data is pre-processed)")
+        print("2. Process observations (data is NOT pre-processed)")
+        print("3. Generate/re-train a species model instead.")
+        print("4. Exit Program")
 
-    # user enters their response
-    data_preprocessed = input("\nEnter response: ")
+        # user enters their response
+        data_preprocessed = input("\nEnter response: ")
 
-    # YES: the excel file is pre-processed, environmental variables are tied to a location
-    if data_preprocessed == "1":
-        print("What is the name of your observations file? Note: Accepted formats: xlsx/xls")
-        file_name = input("File name (path): ")
+        # YES: the excel file is pre-processed, environmental variables are tied to a location
+        if data_preprocessed == "1":
+            print("What is the name of your observations file? Note: Accepted formats: xlsx/xls")
+            file_name = input("File name (path): ")
 
-        # note for the demo input: testing.xlsx
-        # get reliability outcomes for observation file
-        get_reliability(file_name)
+            # note for the demo input: testing.xlsx
+            # get reliability outcomes for observation file
+            get_reliability(file_name)
 
-    # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
-    elif data_preprocessed == "2":
-        correctPath = False
-        while not correctPath:
+        # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
+        elif data_preprocessed == "2":
+            correctPath = False
+            while not correctPath:
+                try:
+                    fileInput = input("File name (path): ")
+                    a = pd.read_excel(fileInput)
+                    correctPath = True
+                except:
+                    print("Wrong input, please input the correct file path");
+            print("Alright! Pre-processing the data now. NOTE: this may take a while. Please allow a few minutes.")
+            print("Output will be stored in preprocess_output.xlsx")
             try:
-                fileInput = input("File name (path): ")
-                a = pd.read_excel(fileInput)
-                correctPath = True
+                writeToFile(fileInput, "preprocess_output.xlsx")
+                get_reliability("preprocess_output.xlsx")
             except:
-                print("Wrong input, please input the correct file path");
-        print("Alright! Pre-processing the data now. NOTE: this may take a while. Please allow a few minutes.")
-        print("Output will be stored in preprocess_output.xlsx")
-        try:
-            writeToFile(fileInput, "preprocess_output.xlsx")
-            get_reliability("preprocess_output.xlsx")
-        except:
-            print()
-            print("Error parsing File")
-            print("Please make sure that your input excel file consist of the below columns only:")
-            print("TAXON_ID, COMMON_NAME, RELIABILITY(EMPTY), LATITUDEDD_NUM, LONGITUDEDD_NUM, RECORD_TYPE, PRIMARY_CDE")
-            sys.exit(0)
-    elif data_preprocessed == "3":
-        dataset_path = input("Enter dataset path: ")    # './balancing_dataset/excel_files/combined_data/combined_white_browed_treecreeper.xlsx'
-        model_name = input("Name of the model: ")   # <name.pkl>
-        generate_model(dataset_path, model_name)
+                print()
+                print("Error parsing File")
+                print("Please make sure that your input excel file consist of the below columns only:")
+                print("TAXON_ID, COMMON_NAME, RELIABILITY(EMPTY), LATITUDEDD_NUM, LONGITUDEDD_NUM, RECORD_TYPE, PRIMARY_CDE")
+                sys.exit(0)
+        elif data_preprocessed == "3":
+            path = "./balancing_dataset/excel_files/combined_data/"
 
-    # invalid response by the user
-    else:
-        print("Sorry. Invalid input. Valid options are: 1, 2")
+            models = {
+                "1": (path + "combined_agile_antechinus.xlsx", "agile_model.pkl"),
+                "2": (path + "combined_beard_heath.xlsx", "beard_heath_model.pkl"),
+                "3": (path + "combined_brown_treecrepper.xlsx", "brown_treecreeper_model.pkl"),
+                "4": (path + "combined_small_triggerplant.xlsx", "small_triggerplant.pkl"),
+                "5": (path + "combined_southern_brown_tree_frog.xlsx", "southern_brown_tree_frog.pkl"),
+                "6": (path + "combined_white_browed_treecreeper.xlsx", "white_browed_treecreeper.pkl"),
+            }
+            print("\nWhich model do you want to generate?")
+            print("1. Agile Antechinus")
+            print("2. Common Beard-hearth")
+            print("3. Brown Treecreeper")
+            print("4. Small Triggerplant")
+            print("5. Southern Brown Tree frog")
+            print("6. White Browed Treecreeper")
+            choice = input("Enter choice: ")
+
+            generate_model(models[choice][0], models[choice][1])
+        elif data_preprocessed == "4":
+            break
+        # invalid response by the user
+        else:
+            print("Sorry. Invalid input. Valid options are: 1, 2")
 
 
 """
@@ -187,7 +204,7 @@ def generate_model(training_file, pickle_name):
 
     # replace text values to numerical (for model processing
     df.RELIABILITY.replace(['Acceptable', 'Unconfirmed', 'Unreliable', 'Confirmed', 'High reliability'],
-                           [int(0), int(1), int(1), int(0), int(0)], inplace=True)
+                           [int(0), int(1), int(2), int(0), int(0)], inplace=True)
 
     # fill n/a values - all values need to be filled for model processing
     df[df == np.inf] = np.nan
@@ -209,12 +226,13 @@ def generate_model(training_file, pickle_name):
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
 
-    pickle.dump(clf, open(pickle_name, 'wb'))
+    path = "./models/" + pickle_name
+    pickle.dump(clf, open(path, 'wb'))
 
     # print accuracy and feature importance
     #print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
     #print("Possible reliability outcomes are: ", y.unique())
 
-    print("Finished generating model!! Your model is called ", pickle_name)
+    print("Finished generating model!! Your model is called ", pickle_name, ". Path to location of model generated: ", path)
 if __name__ == "__main__":
     menu()
