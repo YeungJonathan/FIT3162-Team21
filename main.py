@@ -143,6 +143,9 @@ def get_reliability(input_file):
             predicted_probs = brown_treecreeper.predict_proba([file.iloc[i, 2:]])
         elif species == "White-browed Treecreeper":
             predicted_probs = white_browed_treecreeper.predict_proba([file.iloc[i, 2:]])
+        else:
+            print("Sorry! No available data for ", species)
+            continue
 
         # For instance, the Frog was seen at -38.123, 144.1293
         print("\n",species, "was seen at", lat, long)
