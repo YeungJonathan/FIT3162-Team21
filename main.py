@@ -131,7 +131,7 @@ def get_reliability(input_file):
     del file['CDE_TYPE']
     del file['RECORD_TYPE']
 
-    # fills in missing data
+        # fills in missing data
     file[file == np.inf] = np.nan
     file.fillna(0, inplace=True)
 
@@ -151,17 +151,17 @@ def get_reliability(input_file):
         # for instance if the observation is for the species "Agile Antechinus", then the observation will be processed
         # through the Agile Antechinus model
         if species == "Agile Antechinus":
-            predicted_probs = agile_antechinus.predict_proba([file.iloc[i, 2:]])
+            predicted_probs = agile_antechinus.predict_proba([file.iloc[i, 5:]])
         elif species == "Common Beard-heath":
-            predicted_probs = beard_heath.predict_proba([file.iloc[i, 2:]])
+            predicted_probs = beard_heath.predict_proba([file.iloc[i, 5:]])
         elif species == "Small Triggerplant":
-            predicted_probs = small_triggerplant.predict_proba([file.iloc[i, 2:]])
+            predicted_probs = small_triggerplant.predict_proba([file.iloc[i, 5:]])
         elif species == "Southern Brown Tree Frog":
-            predicted_probs = southern_brown_tree_frog.predict_proba([file.iloc[i, 2:]])
+            predicted_probs = southern_brown_tree_frog.predict_proba([file.iloc[i, 5:]])
         elif species == "Brown Treecreeper":
-            predicted_probs = brown_treecreeper.predict_proba([file.iloc[i, 2:]])
+            predicted_probs = brown_treecreeper.predict_proba([file.iloc[i, 5:]])
         elif species == "White-browed Treecreeper":
-            predicted_probs = white_browed_treecreeper.predict_proba([file.iloc[i, 2:]])
+            predicted_probs = white_browed_treecreeper.predict_proba([file.iloc[i, 5:]])
         else:
             print("Sorry! No available data for ", species)
             continue
@@ -213,7 +213,7 @@ def generate_model(training_file, pickle_name):
     df.fillna(0, inplace=True)
 
     # x data - columns
-    features = df[df.columns[1:len(df.columns)]]
+    features = df[df.columns[4:len(df.columns)]]
 
     # y data - what we want to predict
     y = df['RELIABILITY']
@@ -232,9 +232,15 @@ def generate_model(training_file, pickle_name):
     pickle.dump(clf, open(path, 'wb'))
 
     # print accuracy and feature importance
-    #print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+    print("Accuracy of the model: ", metrics.accuracy_score(y_test, y_pred))
     #print("Possible reliability outcomes are: ", y.unique())
 
-    print("Finished generating model!! Your model is called ", pickle_name, ". Path to location of model generated: ", path)
+    print("\nFinished generating model!! Your model is called ", pickle_name)
+
+    print("\nFeature importance:")
+    for feature in zip(features, clf.feature_importances_):
+        print(feature)
+
+
 if __name__ == "__main__":
     menu()
