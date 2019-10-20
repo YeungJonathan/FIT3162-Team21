@@ -18,14 +18,14 @@ To run the test:
 '''
 class TestCLI(unittest.TestCase):
 
-    assertReturnString = "# --------------------------------------------------------------------\n"
+    assertReturnString = "\n# --------------------------------------------------------------------\n"
     assertReturnString += ("#                      MAIN MENU                                      \n")
     assertReturnString+= ("# --------------------------------------------------------------------\n")
-    assertReturnString+= "Note: this program can be run via command line by typing 'python3 main.py <observations>'. \n"
-    assertReturnString+= "\nHello! Today we'll be processing OBSERVATIONS and displaying their corresponding RELIABILITY outcomes.\n"
-    assertReturnString+= ("Has your observations data come pre-processed with raster files?\n")
-    assertReturnString+= ("1. Yes\n")
-    assertReturnString+= ("2. No\n")
+    assertReturnString+= ("\nPlease select your choice:\n")
+    assertReturnString+= ("1. Process observations (data is pre-processed)\n")
+    assertReturnString+= ("2. Process observations (data is NOT pre-processed)\n")
+    assertReturnString+= ("3. Generate/re-train a species model\n")
+    assertReturnString+= ("4. Exit Program\n")
 
 
     '''
@@ -35,14 +35,15 @@ class TestCLI(unittest.TestCase):
     def test_CLI_correct_first_print(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
-        with unittest.mock.patch('builtins.input', side_effect=['1', './tests/testing_data_excel/testing_reliable.xlsx']):
+        with unittest.mock.patch('builtins.input', side_effect=['1', './tests/testing_data_excel/testing_reliable.xlsx', '4']):
             menu()
         sys.stdout = sys.__stdout__
         assertString = self.assertReturnString
         assertString += "What is the name of your observations file? Note: Accepted formats: xlsx/xls\n\n"
         assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
         assertString += " The observation IS reliable\n"
-        assertString += " Prediction percentages [0.97730358 0.00852486 0.01417156]\n"
+        assertString += " Prediction percentages [0.94261246 0.0196184  0.03776914]\n"
+        assertString += self.assertReturnString
         self.assertEqual(capturedOutput.getvalue(), assertString)
 
 
@@ -56,7 +57,7 @@ class TestCLI(unittest.TestCase):
     def test_CLI_wrong_second_output(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
-        with unittest.mock.patch('builtins.input', side_effect=['1', '2', './tests/testing_data_excel/testing_reliable.xlsx']):
+        with unittest.mock.patch('builtins.input', side_effect=['1', '2', './tests/testing_data_excel/testing_reliable.xlsx','4']):
             menu()
         sys.stdout = sys.__stdout__
         assertString = self.assertReturnString
@@ -64,7 +65,9 @@ class TestCLI(unittest.TestCase):
         assertString += "Wrong input, please input the correct file path\n\n"
         assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
         assertString += " The observation IS reliable\n"
-        assertString += " Prediction percentages [0.97730358 0.00852486 0.01417156]\n"
+        assertString += " Prediction percentages [0.94261246 0.0196184  0.03776914]\n"
+        assertString += self.assertReturnString
+
         self.assertEqual(capturedOutput.getvalue(), assertString)
 
 
@@ -78,7 +81,7 @@ class TestCLI(unittest.TestCase):
     def test_CLI_multiple_wrong_output(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
-        with unittest.mock.patch('builtins.input', side_effect=['1', '2', 'Random Path','./tests/testing_data_excel/testing_reliable_wrong.xlsx', './tests/testing_data_excel/testing_reliable.xlsx']):
+        with unittest.mock.patch('builtins.input', side_effect=['1', '2', 'Random Path','./tests/testing_data_excel/testing_reliable_wrong.xlsx', './tests/testing_data_excel/testing_reliable.xlsx', '4']):
             menu()
         sys.stdout = sys.__stdout__
         assertString = self.assertReturnString
@@ -88,24 +91,22 @@ class TestCLI(unittest.TestCase):
         assertString += "Wrong input, please input the correct file path\n\n"
         assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
         assertString += " The observation IS reliable\n"
-        assertString += " Prediction percentages [0.97730358 0.00852486 0.01417156]\n"
+        assertString += " Prediction percentages [0.94261246 0.0196184  0.03776914]\n"
+        assertString += self.assertReturnString
         self.assertEqual(capturedOutput.getvalue(), assertString)
 
 
     '''
-    Function that simulates wrong user input on first input.
-    First input must be 1 or 2 but we are testing values of 3
+    Function that simulates model generation
+    Generating Southern Brown Tree frog
+    Makes sure that generating model works without any erro
     Expected Output: Prints "Sorry. Invalid input. Valid options are: 1, 2".
     '''
-    @patch('main.input', return_value='3')
-    def test_CLI_wrong_first_input(self, input):
+    def test_CLI_wrong_first_input(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
-        menu()
-        sys.stdout = sys.__stdout__
-        assertString = self.assertReturnString
-        assertString+= "Sorry. Invalid input. Valid options are: 1, 2\n"
-        self.assertEqual(capturedOutput.getvalue(), assertString)
+        with unittest.mock.patch('builtins.input', side_effect=['3', '5','4']):
+            menu()
 
 
     '''
@@ -119,7 +120,7 @@ class TestCLI(unittest.TestCase):
     def testing_cli_2_correct_file(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
-        with unittest.mock.patch('builtins.input', side_effect=['2', './tests/testing_data_excel/testing_cli_2_correct.xlsx']):
+        with unittest.mock.patch('builtins.input', side_effect=['2', './tests/testing_data_excel/testing_cli_2_correct.xlsx', '4']):
             menu()
         sys.stdout = sys.__stdout__
         assertString = self.assertReturnString
@@ -128,32 +129,30 @@ class TestCLI(unittest.TestCase):
         assertString += "Output will be stored in preprocess_output.xlsx\n\n"
         assertString += " Agile Antechinus was seen at -38.35692 144.97151\n"
         assertString += " The observation IS reliable\n"
-        assertString += " Prediction percentages [0.98567279 0.00762248 0.00670473]\n\n"
+        assertString += " Prediction percentages [0.95406991 0.01917657 0.02675352]\n\n"
 
         assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
         assertString += " The observation IS reliable\n"
-        assertString += " Prediction percentages [0.97730358 0.00852486 0.01417156]\n"
+        assertString += " Prediction percentages [0.94261246 0.0196184  0.03776914]\n"
+        assertString += self.assertReturnString
 
         self.assertEqual(capturedOutput.getvalue(), assertString)
         
     
     '''
-    Function that simulates user input "2" for first input.
-    User input "2" in first arguement means that user has not preprocess the data
-    This will then prompt user to input excel file path
-    The input excel Path for this test should be incorrect
-    We will be testing incorrect path for this test case
-    After inputting incorrect path, we will input correct path but wrong input file
-    Since the input file does not have the neccessary fields, it will exit with code 0
-    Expected Output: System exit with code (0).
+    Function that tests if we can quit
+    Presses 4 and attempts to quit.
+    Expected: Quit successfully.
     '''
     def testing_cli_2_wrong_path_wrong_file(self):
         capturedOutput = io.StringIO()          # Create StringIO object
-        sys.stdout = capturedOutput
-        with unittest.mock.patch('builtins.input', side_effect=['2', './wrongPath', './tests/testing_data_excel/testing_cli_2_wrong.xlsx']):
-            with self.assertRaises(SystemExit) as cm:
-                menu()
-            self.assertEqual(cm.exception.code, 0)
+        sys.stdout = capturedOutput  
+        with unittest.mock.patch('builtins.input', side_effect=['4']):
+            menu()
+        sys.stdout = sys.__stdout__
+        assertString = self.assertReturnString
+
+        self.assertEqual(capturedOutput.getvalue(), assertString)
 
 if __name__ == '__main__':
     unittest.main()
