@@ -79,24 +79,30 @@ def menu():
                 sys.exit(0)
         # GENERATE/Re-train model
         elif data_preprocessed == "3":
-            path = "./balancing_dataset/excel_files/combined_data/"
+            correctInput = False
+            while not correctInput:
+                path = "./balancing_dataset/excel_files/combined_data/"
 
-            models = {
-                "1": (path + "combined_agile_antechinus.xlsx", "agile_model.pkl"),
-                "2": (path + "combined_beard_heath.xlsx", "beard_heath_model.pkl"),
-                "3": (path + "combined_brown_treecrepper.xlsx", "brown_treecreeper_model.pkl"),
-                "4": (path + "combined_small_triggerplant.xlsx", "small_triggerplant.pkl"),
-                "5": (path + "combined_southern_brown_tree_frog.xlsx", "southern_brown_tree_frog.pkl"),
-                "6": (path + "combined_white_browed_treecreeper.xlsx", "white_browed_treecreeper.pkl"),
-            }
-            print("\nWhich model do you want to generate?")
-            print("1. Agile Antechinus")
-            print("2. Common Beard-hearth")
-            print("3. Brown Treecreeper")
-            print("4. Small Triggerplant")
-            print("5. Southern Brown Tree frog")
-            print("6. White Browed Treecreeper")
-            choice = input("Enter choice: ")
+                models = {
+                    "1": (path + "combined_agile_antechinus.xlsx", "agile_model.pkl"),
+                    "2": (path + "combined_beard_heath.xlsx", "beard_heath_model.pkl"),
+                    "3": (path + "combined_brown_treecrepper.xlsx", "brown_treecreeper_model.pkl"),
+                    "4": (path + "combined_small_triggerplant.xlsx", "small_triggerplant.pkl"),
+                    "5": (path + "combined_southern_brown_tree_frog.xlsx", "southern_brown_tree_frog.pkl"),
+                    "6": (path + "combined_white_browed_treecreeper.xlsx", "white_browed_treecreeper.pkl"),
+                }
+                print("\nWhich model do you want to generate?")
+                print("1. Agile Antechinus")
+                print("2. Common Beard-hearth")
+                print("3. Brown Treecreeper")
+                print("4. Small Triggerplant")
+                print("5. Southern Brown Tree frog")
+                print("6. White Browed Treecreeper")
+                choice = input("Enter choice: ")
+                if choice.strip() in ['1','2','3','4','5','6']:
+                    correctInput = True
+                else:
+                    print("Invalid Input, please try again\n")
 
             generate_model(models[choice][0], models[choice][1])
         # exit program
