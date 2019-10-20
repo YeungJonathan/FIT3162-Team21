@@ -19,7 +19,7 @@ class TestPseudoAbsenceDataLength(unittest.TestCase):
     Test for Agile Antechinus
     '''
     def test_absencedata_generation_length_agile_antechinus(self):
-        absenceData.generateAbsenceData('Agile Antechinus', './tests/testing_absence/agile_antechinus_test.xlsx');
+        absenceData.generateAbsenceData('Agile Antechinus', './tests/testing_absence/agile_antechinus_test.xlsx')
         wb = openpyxl.load_workbook('./tests/testing_absence/agile_antechinus_test.xlsx')
         existingWorksheet = wb['Sheet1']
         row_count = existingWorksheet.max_row
@@ -31,7 +31,7 @@ class TestPseudoAbsenceDataLength(unittest.TestCase):
         self.assertGreaterEqual(numOfItem, row_count)
 
     '''
-    Test for Brown_treecreeoer
+    Test for Brown_treecreeper
     '''
     def test_absencedata_generation_length_brown_treecreeper(self):
         absenceData.generateAbsenceData('Brown Treecreeper', './tests/testing_absence/brown_treecreeper_test.xlsx');
