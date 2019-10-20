@@ -46,6 +46,17 @@ class TestCLI(unittest.TestCase):
         assertString += self.assertReturnString
         self.assertEqual(capturedOutput.getvalue(), assertString)
 
+    '''
+    Function to test all correct user input with an excel file consiting of large amount of data
+    Mainly testing how this program handles large amount of input data
+    Input excel file includes a reliable observation taken from the VBA file.
+    '''
+    def test_CLI_correct_second_large_data(self):
+        capturedOutput = io.StringIO()          # Create StringIO object
+        sys.stdout = capturedOutput  
+        with unittest.mock.patch('builtins.input', side_effect=['2', './tests/testing_data_excel/test_cli_large_data.xlsx', '4']):
+            menu()
+
 
     '''
     Function to test 1 wrong user input. 
