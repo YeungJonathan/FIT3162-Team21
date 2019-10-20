@@ -22,7 +22,7 @@ def generateAbsenceData(speciesName, outputFilePath):
     dataList = []
     longList = []
     latList = []
-    taxonID = 0;
+    taxonID = 0
 
     for index, row in ufi.iterrows():
         if taxonID == 0:

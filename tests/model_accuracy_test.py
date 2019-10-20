@@ -1,6 +1,8 @@
 import pickle
 import sys
 import pandas as pd
+from sklearn import metrics
+from sklearn.ensemble import RandomForestClassifier
 import unittest
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -40,7 +42,14 @@ class TestModelAccuracy(unittest.TestCase):
         y = df['RELIABILITY']
         X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.20)
 
-        score = model.score(X_test, y_test)
+        # build the classifier
+        clf = RandomForestClassifier(n_estimators=200, max_depth=5)
+
+        clf.fit(X_train, y_train)
+        y_pred = clf.predict(X_test)
+
+        # print accuracy and feature importance
+        score = metrics.accuracy_score(y_test, y_pred)
         return score * 100
 
     '''
