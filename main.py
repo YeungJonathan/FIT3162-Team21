@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from process_observation_data import writeToFile
 import pickle
 import sys
+import time
 
 """
 Models: they are already generated, we are simply loading them in from memory
@@ -56,9 +57,12 @@ def menu():
                     fileInput = input("File name (path): ")
                     a = pd.read_excel(fileInput)
                     correctPath = True
+                    start = time.time()
                     get_reliability(fileInput)
+                    end = time.time()
+                    print("\nPrediction time taken: %s seconds"% round(end - start, 5))
                 except:
-                    print("Wrong input, please input the correct file path");
+                    print("Wrong input, please input the correct file path")
 
         # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
         elif data_preprocessed == "2":
@@ -69,12 +73,19 @@ def menu():
                     a = pd.read_excel(fileInput)
                     correctPath = True
                 except:
-                    print("Wrong input, please input the correct file path");
+                    print("Wrong input, please input the correct file path")
             print("Alright! Pre-processing the data now. NOTE: this may take a while. Please allow a few minutes.")
             print("Output will be stored in preprocess_output.xlsx")
             try:
+                startPreprocess = time.time()
                 writeToFile(fileInput, "preprocess_output.xlsx")
+                endPreprocess = time.time()
+
+                start = time.time()
                 get_reliability("preprocess_output.xlsx")
+                end = time.time()
+                print("\nPreprocess Time Taken: %s seconds" % round(endPreprocess - startPreprocess, 5))
+                print("\nPrediction time taken: %s seconds"% round(end - start, 5))
             except:
                 print()
                 print("Error parsing File")
