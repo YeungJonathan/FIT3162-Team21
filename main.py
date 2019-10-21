@@ -50,11 +50,15 @@ def menu():
         # YES: the excel file is pre-processed, environmental variables are tied to a location
         if data_preprocessed == "1":
             print("What is the name of your observations file? Note: Accepted formats: xlsx/xls")
-            file_name = input("File name (path): ")
-
-            # note for the demo input: testing.xlsx
-            # get reliability outcomes for observation file
-            get_reliability(file_name)
+            correctPath = False
+            while not correctPath:
+                try:
+                    fileInput = input("File name (path): ")
+                    a = pd.read_excel(fileInput)
+                    correctPath = True
+                    get_reliability(fileInput)
+                except:
+                    print("Wrong input, please input the correct file path");
 
         # NO: the excel file is NOT pre-processed, environmentla variables are not tied to a location
         elif data_preprocessed == "2":
@@ -110,7 +114,7 @@ def menu():
             break
         # invalid response by the user
         else:
-            print("Sorry. Invalid input. Valid options are: 1, 2")
+            print("Sorry. Invalid input. Valid options are: 1, 2, 3, 4")
 
 
 """
@@ -229,7 +233,7 @@ def generate_model(training_file, pickle_name):
     X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.20)
 
     # build the classifier
-    clf = RandomForestClassifier(n_estimators=200, max_depth=5)
+    clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=24)
 
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)

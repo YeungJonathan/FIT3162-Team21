@@ -29,6 +29,21 @@ class TestCLI(unittest.TestCase):
 
 
     '''
+    Function to test wrong user input on main menu
+    Invalid first input follow by input "4" which quits the program
+    '''
+    def test_CLI_wrong_first_print(self):
+        capturedOutput = io.StringIO()          # Create StringIO object
+        sys.stdout = capturedOutput  
+        with unittest.mock.patch('builtins.input', side_effect=['just an invalid input', '4']):
+            menu()
+        sys.stdout = sys.__stdout__
+        assertString = self.assertReturnString
+        assertString += "Sorry. Invalid input. Valid options are: 1, 2, 3, 4\n"
+        assertString += self.assertReturnString
+        self.assertEqual(capturedOutput.getvalue(), assertString)
+
+    '''
     Function to test all correct user input (no wrong inputs)
     Input excel file includes a reliable observation taken from the VBA file.
     '''
@@ -68,11 +83,34 @@ class TestCLI(unittest.TestCase):
     def test_CLI_wrong_second_output(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
-        with unittest.mock.patch('builtins.input', side_effect=['1', '2', './tests/testing_data_excel/testing_reliable.xlsx','4']):
+        with unittest.mock.patch('builtins.input', side_effect=['1', 'wrong filepath', './tests/testing_data_excel/testing_reliable.xlsx','4']):
             menu()
         sys.stdout = sys.__stdout__
         assertString = self.assertReturnString
         assertString += "What is the name of your observations file? Note: Accepted formats: xlsx/xls\n"
+        assertString += "Wrong input, please input the correct file path\n\n"
+        assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
+        assertString += " The observation IS reliable\n"
+        assertString += " Prediction percentages [0.94261246 0.0196184  0.03776914]\n"
+        assertString += self.assertReturnString
+
+    '''
+    Function to test 3 wrong user input. 
+    Second, third and forth user input is wrong -- Path of the input file should be correct
+    Expected Output: Program should prompt user input file path until path correct.
+                     Should still be able to output reliable results as third input is a correct path
+    Input excel file includes a reliable observation taken from the VBA file.
+    '''
+    def test_CLI_wrong_second_output(self):
+        capturedOutput = io.StringIO()          # Create StringIO object
+        sys.stdout = capturedOutput  
+        with unittest.mock.patch('builtins.input', side_effect=['1', 'p1', 'p2', 'p3', './tests/testing_data_excel/testing_reliable.xlsx','4']):
+            menu()
+        sys.stdout = sys.__stdout__
+        assertString = self.assertReturnString
+        assertString += "What is the name of your observations file? Note: Accepted formats: xlsx/xls\n"
+        assertString += "Wrong input, please input the correct file path\n"
+        assertString += "Wrong input, please input the correct file path\n"
         assertString += "Wrong input, please input the correct file path\n\n"
         assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
         assertString += " The observation IS reliable\n"
@@ -111,12 +149,23 @@ class TestCLI(unittest.TestCase):
     Function that simulates model generation
     Generating Southern Brown Tree frog
     Makes sure that generating model works without any erro
-    Expected Output: Prints "Sorry. Invalid input. Valid options are: 1, 2".
     '''
-    def test_CLI_wrong_first_input(self):
+    def test_CLI_generate_model_correct(self):
         capturedOutput = io.StringIO()          # Create StringIO object
         sys.stdout = capturedOutput  
         with unittest.mock.patch('builtins.input', side_effect=['3', '5','4']):
+            menu()
+
+    '''
+    Function that simulates model generation
+    Generating Southern Brown Tree frog
+    Second input is wrong
+    Makes sure that generating model works without any error with invalid input
+    '''
+    def test_CLI_generate_model_wronginput(self):
+        capturedOutput = io.StringIO()          # Create StringIO object
+        sys.stdout = capturedOutput  
+        with unittest.mock.patch('builtins.input', side_effect=['3', 'random input' ,'5','4']):
             menu()
 
 
@@ -145,6 +194,35 @@ class TestCLI(unittest.TestCase):
         assertString += " Agile Antechinus was seen at -38.35598 144.96925\n"
         assertString += " The observation IS reliable\n"
         assertString += " Prediction percentages [0.94261246 0.0196184  0.03776914]\n"
+        assertString += self.assertReturnString
+
+        self.assertEqual(capturedOutput.getvalue(), assertString)
+
+    '''
+    Function that simulates user input "2" for first input.
+    user input "2" in first arguement means that user has not preprocess the data
+    This will then prompt user to input excel file path
+    The input excel Path for this test should be correct
+    Since we are testing whether it will ouput correctly if we input a correct path
+    Expected Output: Predicts correctly.
+    '''
+    def testing_cli_2_wrong_file_column(self):
+        capturedOutput = io.StringIO()          # Create StringIO object
+        sys.stdout = capturedOutput  
+        with unittest.mock.patch('builtins.input', side_effect=['2', './tests/testing_data_excel/testing_cli_2_wrong.xlsx', '4']):
+            menu()
+        sys.stdout = sys.__stdout__
+        assertString = self.assertReturnString
+
+        assertString += "Alright! Pre-processing the data now. NOTE: this may take a while. Please allow a few minutes.\n"
+        assertString += "Output will be stored in preprocess_output.xlsx\n\n"
+        assertString += " Small Triggerplant was seen at -37.00972 142.72417\n"
+        assertString += " The observation IS reliable\n"
+        assertString += " Prediction percentages [0.82811594 0.17188406]\n\n"
+
+        assertString += " Common Beard-heath was seen at -38.06222 147.55722\n"
+        assertString += " The observation IS reliable\n"
+        assertString += " Prediction percentages [0.85692874 0.14307126]\n"
         assertString += self.assertReturnString
 
         self.assertEqual(capturedOutput.getvalue(), assertString)
