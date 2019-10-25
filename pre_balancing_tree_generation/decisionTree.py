@@ -7,6 +7,12 @@ import matplotlib.pyplot as plt
 import geopy.distance
 
 
+'''
+This is the file used for pre-balanced tree generation
+Meaning that this file will no longer be used
+Only used for first generation.
+'''
+
 def generateTree(species):
     # read excel files
     vba = pd.read_excel('VBA_Raster.xlsx') # VBA (training data)

@@ -5,7 +5,11 @@ from sklearn.ensemble import IsolationForest
 from pseudo_absence_raster import findRaster
 import matplotlib.pyplot as plt
 
-
+'''
+Function to generate absence data for a particular species
+:Params: speciesName - The name of th species that we want the generate
+:Params: outputFilePath - the path which the output will be save    
+'''
 def generateAbsenceData(speciesName, outputFilePath):
     vba = pd.read_excel('./VBA_Raster.xlsx') # VBA (training data)
     allLat = vba["LATITUDEDD_NUM"]
@@ -24,6 +28,7 @@ def generateAbsenceData(speciesName, outputFilePath):
     latList = []
     taxonID = 0
 
+    # Get corresponding excel rows
     for index, row in ufi.iterrows():
         if taxonID == 0:
             taxonID = row['TAXON_ID']
@@ -49,6 +54,7 @@ def generateAbsenceData(speciesName, outputFilePath):
         HEATING = row['HEATING']
         STREAMS = row['STREAMS']
 
+        # add to longitude, latitude and datalist to pass into the classifier
         longList.append(LONGITUDEDD_NUM)
         latList.append(LATITUDEDD_NUM)
         dataList.append([LATITUDEDD_NUM, LONGITUDEDD_NUM, VEG_TYPE, WETNESS, SUMMER_1, SUMMER_2, RAINFALL_JULY, MIN_TEMP_JULY, RAINFALL_JAN, MAX_TEMP_JAN, RADIOMETRICS_TH
@@ -56,7 +62,7 @@ def generateAbsenceData(speciesName, outputFilePath):
 
     rng = np.random.RandomState(42)
 
-    # # Generate some abnormal novel observations
+    # Generate some abnormal novel observations
     lat_outliers = rng.uniform(low=minLat, high=maxLat, size=(10000 , 1))
     long_outliers = rng.uniform(low=minLong, high=maxLong, size=(10000, 1))
 
@@ -65,15 +71,19 @@ def generateAbsenceData(speciesName, outputFilePath):
         currentPoint = findRaster(lat_outliers[i][0], long_outliers[i][0])
         outliers.append(currentPoint)
 
-    # fit the model
+    # create the isolotion forest classifier
     clf = IsolationForest(behaviour='new', max_samples=numOfItem,
                         n_estimators = 300,
                         random_state=rng, contamination='auto')
 
+    # fit the data into the classifier
     clf.fit(dataList)
+    # predict to get the absence data output
     y_pred_outliers = clf.predict(outliers)
     y_predict_long = []
     y_predict_lat = []
+    
+    # iterate through the output and check if they are absence
     for index in range(len(y_pred_outliers)):
         if y_pred_outliers[index] == -1:
             y_predict_lat.append(outliers[index][0])
@@ -101,6 +111,9 @@ def generateAbsenceData(speciesName, outputFilePath):
     #########################################################################################
     #########################################################################################
 
+
+    # for each absence data generated
+    # add to excel file
     workbook = xlsxwriter.Workbook(outputFilePath, {'nan_inf_to_errors': True})
     worksheet = workbook.add_worksheet()
 

@@ -511,3 +511,6 @@ def writeToFile(input_file, output_file):
 
 
     workbook.close()    # close the workbook after writing to file
+
+if __name__ == "__main__":
+    writeToFile("../VBA_data.xls", '../TEST_RASTER_VBA.xls')

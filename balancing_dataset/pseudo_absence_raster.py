@@ -1,6 +1,13 @@
 from osgeo import gdal
 from pyproj import Proj, transform
 
+
+"""
+Make a particular point be of the same coordinate system. In this instance we are converting a point using the
+coordinate system epsg:4326 to the coordinate system epsg:3111
+
+@param point, the point that we would like to convert (to a different coordinate system)
+"""
 def changeCoordinateSystem(point):
     inProj = Proj(init='epsg:4326')
     outProj = Proj(init='epsg:3111')
@@ -8,12 +15,27 @@ def changeCoordinateSystem(point):
 
     return (x2, y2)
 
+"""
+Calculates information about the environmental variable associated at a particular location point.
+
+@param point, a (long/lat) location point.
+@param yOri, y origins of the raster file
+@param xOri, x origins of the raster file
+@param type, the environmental variable (raster type) being calculated. i.e this may be wetness, vegetation, ect.
+@param pixw, pixel width of the raster file
+@param pixh, pixel height of the raster file
+"""
 def calculateRaster(point, yOri, xOri, type, pixw, pixh):
     col = int((point[0] - xOri) / pixw)
     row = int((yOri - point[1]) / pixh)
 
     return type[row][col]
 
+
+'''
+Opens the raster files to get the raster values
+Based on their lat and long
+'''
 # --------------------------------------------------------------------
 #      1. VEG
 # --------------------------------------------------------------------

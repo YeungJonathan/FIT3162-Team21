@@ -4,6 +4,12 @@ import rasterio
 import rasterio.features
 import rasterio.warp
 
+'''
+This is the file used for first generation raster file filtering
+Meaning that this file will no longer be used
+Only used for first generation.
+Preprocessing should be done with files in the balancing_dataset directory
+'''
 def open_raster_file(filePath):
     '''
     Function used to open the raster_file
