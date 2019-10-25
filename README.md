@@ -17,15 +17,25 @@ Using the environmental variables tied to each location, we need to model based 
 The dataset we are given does not contain environmental variables. Thus, we need to extract environmental variables from long, lat locations using raster data that has been provided to us.
 
 # In depth instructions to run the program
-1. PLEASE check the "Code Report", a technical user and end user guide is detailed there
+1. PLEASE check the "Code Report" (submitted document), a technical user and end user guide is detailed there. 
 
 # Before running:
 1. Download raster files: https://drive.google.com/drive/folders/1kwLZlPiwJS47UNBrsXe3W78isjqoY6bg  
 Type in the terminal:
 ```
-brew install graphviz
-pip install pandas
-pip install sklearn
+pip3 install GDAL
+pip3 install geopy
+pip3 install graphviz
+pip3 install matplotlib
+pip3 install pandas
+pip3 install proj
+pip3 install pyproj
+pip3 install rasterio
+pip3 install sklearn
+pip3 install Transform
+pip3 install xlsx
+pip3 install XlsxWriter
+
 ```
 
 # Running the program
